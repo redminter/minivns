@@ -14,7 +14,7 @@ INSERT INTO subjects (id, title,user_id,vns_url,lection_url,prakt_url,lab_url) V
 INSERT INTO subjects (id, title,user_id,vns_url,lection_url,prakt_url,lab_url) VALUES (10, 'Nick''s To-Do #1',5,'vns_url','lection_url','prakt_url','lab_url');
 INSERT INTO subjects (id, title,user_id,vns_url,lection_url,prakt_url,lab_url) VALUES (11, 'Nick''s To-Do #2',5,'vns_url','lection_url','prakt_url','lab_url');
 
-INSERT INTO tasks (id, title, subject_id,link,deadline,state_id) VALUES (6, 'Task #2', 7,'linkedIN','2022-11-16 14:00:04.810221', 5);
-INSERT INTO tasks (id, title, subject_id,link,deadline,state_id) VALUES (5, 'Task #1', 7,'linkedIN','2022-11-15 14:00:11.480271', 5);
-INSERT INTO tasks (id, title, subject_id,link,deadline,state_id) VALUES (7, 'Task #3', 7,'linkedIN','2022-11-28 14:00:16.351238', 6);
+INSERT INTO tasks (id, title, subject_id,link,deadline,state_id,user_id) VALUES (6, 'Task #2', 7,'linkedIN','2022-11-16 14:00:04.810221', 5, 5);
+INSERT INTO tasks (id, title, subject_id,link,deadline,state_id,user_id) VALUES (5, 'Task #1', 7,'linkedIN','2022-11-15 14:00:11.480271', 5, 6);
+INSERT INTO tasks (id, title, subject_id,link,deadline,state_id,user_id) VALUES (7, 'Task #3', 7,'linkedIN','2022-11-28 14:00:16.351238', 6, 4);
 
