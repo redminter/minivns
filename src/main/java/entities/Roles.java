@@ -7,6 +7,7 @@ import lombok.NonNull;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.List;
 
 @Data
 @Entity
@@ -23,5 +24,5 @@ public class Roles {
     @Column(name = "name", nullable = false)
     private String name;
     @OneToMany(mappedBy = "rolesByRoleId")
-    private Collection<Users> usersById;
+    private List<Users> usersById;
 }

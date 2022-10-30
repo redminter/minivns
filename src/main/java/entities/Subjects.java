@@ -8,6 +8,7 @@ import lombok.NonNull;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.Collection;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -42,11 +43,11 @@ public class Subjects {
     private String labUrl;
 
     @NonNull
-    @ManyToOne
+    @ManyToMany
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private Users usersByUserId;
+    private List<Users> user_id;
 
-    @OneToMany(mappedBy = "subjectsBySubjectId")
-    private Collection<Tasks> tasksById;
+    @OneToMany(mappedBy = "task_id")
+    private List<Tasks> tasksById;
 
 }

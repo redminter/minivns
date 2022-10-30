@@ -7,6 +7,7 @@ import lombok.NonNull;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -40,11 +41,11 @@ public class Users {
     @Column(name = "password")
     private String password;
 
-    @OneToMany(mappedBy = "usersByUserId")
-    private Collection<Subjects> subjectsById;
+    @ManyToMany(mappedBy = "usersByUserId")
+    private List<Subjects> subjectsById;
 
     @OneToMany(mappedBy = "usersByUserId")
-    private Collection<Tasks> tasksById;
+    private List<Tasks> tasksById;
 
     @NonNull
     @ManyToOne

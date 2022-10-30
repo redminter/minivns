@@ -7,6 +7,7 @@ import lombok.NonNull;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -24,6 +25,6 @@ public class States {
     @Column(name = "name")
     private String name;
     @OneToMany(mappedBy = "statesByStateId")
-    private Collection<Tasks> tasksById;
+    private List<Tasks> tasksById;
 
 }
