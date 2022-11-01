@@ -1,4 +1,4 @@
-package entities;
+package com.petproject.minivns.entities;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -13,9 +13,10 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "tasks")
 @EqualsAndHashCode(of = {"id", "name"})
-public class Tasks {
+public class Task {
     @NonNull
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name = "tasks_start8", initialValue = 8)
     @Id
     @Column(name = "id")
     private int id;
@@ -38,22 +39,22 @@ public class Tasks {
     @Column(name = "state_id")
     private int stateId;
 
-    @NonNull
-    @Column(name = "user_id")
-    private int userId;
+//    @NonNull
+//    @Column(name = "user_id")
+//    private int userId;
 
-    @NonNull
-    @ManyToOne
-    @JoinColumn(name = "subject_id", referencedColumnName = "id")
-    private Subjects subjectsBySubjectId;
+//    @NonNull
+//    @ManyToOne
+//    @JoinColumn(name = "subject_id", referencedColumnName = "id")
+//    private Subject subjectBySubjectId;
 
-    @NonNull
-    @ManyToOne
-    @JoinColumn(name = "state_id", referencedColumnName = "id")
-    private States statesByStateId;
+//    @NonNull
+//    @ManyToOne
+//    @JoinColumn(name = "state_id", referencedColumnName = "id")
+//    private State stateByStateId;
 
     @NonNull
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private Users usersByUserId;
+    private User user_id;
 }

@@ -1,4 +1,4 @@
-package entities;
+package com.petproject.minivns.entities;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -7,7 +7,6 @@ import lombok.NonNull;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import java.util.Collection;
 import java.util.List;
 
 @Data
@@ -15,8 +14,9 @@ import java.util.List;
 @Entity
 @Table(name = "subjects")
 @EqualsAndHashCode(of = {"id", "name"})
-public class Subjects {
+public class Subject {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name = "subjects_start12", initialValue = 12)
     @Id
     @Column(name = "id", nullable = false)
     @NotBlank
@@ -45,9 +45,9 @@ public class Subjects {
     @NonNull
     @ManyToMany
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private List<Users> user_id;
+    private List<User> user_id;
 
-    @OneToMany(mappedBy = "task_id")
-    private List<Tasks> tasksById;
+//    @OneToMany(mappedBy = "task_id")
+//    private List<Task> taskById;
 
 }

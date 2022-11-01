@@ -1,4 +1,4 @@
-package entities;
+package com.petproject.minivns.entities;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import javax.persistence.*;
-import java.util.Collection;
 import java.util.List;
 
 @Data
@@ -14,9 +13,10 @@ import java.util.List;
 @Entity
 @Table(name = "states")
 @EqualsAndHashCode(of = {"id", "name"})
-public class States {
+public class State {
     @NonNull
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name = "states_start7", initialValue = 7)
     @Id
     @Column(name = "id")
     private int id;
@@ -24,7 +24,7 @@ public class States {
     @NonNull
     @Column(name = "name")
     private String name;
-    @OneToMany(mappedBy = "statesByStateId")
-    private List<Tasks> tasksById;
+//    @OneToMany(mappedBy = "statesByStateId")
+//    private List<Task> taskById;
 
 }
