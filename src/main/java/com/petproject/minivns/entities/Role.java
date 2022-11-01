@@ -16,7 +16,7 @@ public class Role {
     @SequenceGenerator(name = "roles_start3", initialValue = 3)
     @Id
     @Column(name = "id")
-    private Long id;
+    private Integer id;
     @NonNull
     @Column(name = "name", nullable = false)
     private String name;
@@ -26,7 +26,7 @@ public class Role {
     public Role(String name){
         this.name = name;
     }
-    public Role(Long id,String name){
+    public Role(Integer id,String name){
         this.id = id;
         this.name = name;
     }

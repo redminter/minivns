@@ -20,7 +20,7 @@ public class Subject {
     @Id
     @Column(name = "id", nullable = false)
     @NotBlank
-    private int id;
+    private Integer id;
 
     @NonNull
     @Column(name = "title")

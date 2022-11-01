@@ -19,7 +19,7 @@ public class Task {
     @SequenceGenerator(name = "tasks_start8", initialValue = 8)
     @Id
     @Column(name = "id")
-    private int id;
+    private Integer id;
 
     @NonNull
     @Column(name = "title")

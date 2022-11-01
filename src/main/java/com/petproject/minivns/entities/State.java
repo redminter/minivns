@@ -19,7 +19,7 @@ public class State {
     @SequenceGenerator(name = "states_start7", initialValue = 7)
     @Id
     @Column(name = "id")
-    private int id;
+    private Long id;
 
     @NonNull
     @Column(name = "name")

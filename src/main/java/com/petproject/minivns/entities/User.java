@@ -19,7 +19,7 @@ public class User {
     @SequenceGenerator(name = "users_start7", initialValue = 7)
     @Id
     @Column(name = "id")
-    private int id;
+    private Integer id;
 
     @NonNull
     @Column(name = "first_name")
