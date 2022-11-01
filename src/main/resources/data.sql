@@ -18,3 +18,36 @@ INSERT INTO tasks (id, title, subject_id,link,deadline,state_id,user_id) VALUES 
 INSERT INTO tasks (id, title, subject_id,link,deadline,state_id,user_id) VALUES (5, 'Task #1', 7,'linkedIN','2022-11-15 14:00:11.480271', 5, 6);
 INSERT INTO tasks (id, title, subject_id,link,deadline,state_id,user_id) VALUES (7, 'Task #3', 7,'linkedIN','2022-11-28 14:00:16.351238', 6, 4);
 
+--for changing first number of id autoincrementing
+create sequence roles_start3 start with 3 increment by 1;
+create sequence users_start7 start with 7 increment by 1;
+create sequence states_start7 start with 7 increment by 1;
+create sequence subjects_start12 start with 12 increment by 1;
+create sequence tasks_start8 start with 8 increment by 1;
+
+-- change exactly in the database sequences
+-- ---- auto-generated definition
+-- create sequence roles_start3 start with 3 increment by 1;
+--
+-- alter sequence roles_start3 owner to postgres;
+--
+-- -- auto-generated definition
+-- create sequence states_start7 start with 7 increment by 1;
+--
+-- alter sequence states_start7 owner to postgres;
+--
+-- -- auto-generated definition
+-- create sequence subjects_start12 start with 12 increment by 1;
+--
+-- alter sequence subjects_start12 owner to postgres;
+--
+-- -- auto-generated definition
+-- create sequence tasks_start8 start with 8 increment by 1;
+--
+-- alter sequence tasks_start8 owner to postgres;
+--
+-- -- auto-generated definition
+-- create sequence users_start7 start with 7 increment by 1;
+--
+-- alter sequence users_start7 owner to postgres;
+
