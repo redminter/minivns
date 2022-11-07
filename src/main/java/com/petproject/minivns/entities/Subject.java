@@ -15,20 +15,15 @@ import java.util.List;
 @Table(name = "subjects")
 @EqualsAndHashCode(of = {"id", "name"})
 public class Subject {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @SequenceGenerator(name = "subjects_start12", initialValue = 12)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "subjects_start12")
+    @SequenceGenerator(name = "subjects_start12", allocationSize = 1)
     @Id
     @Column(name = "id", nullable = false)
-    @NotBlank
     private Integer id;
 
     @NonNull
     @Column(name = "title")
     private String title;
-
-    @NonNull
-    @Column(name = "user_id")
-    private int userId;
 
     @Column(name = "vns_url")
     private String vnsUrl;
@@ -42,12 +37,23 @@ public class Subject {
     @Column(name = "lab_url")
     private String labUrl;
 
-    @NonNull
-    @ManyToMany
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private List<User> user_id;
+    public Subject(@NonNull String title, String vnsUrl, String lectionUrl, String praktUrl, String labUrl) {
+        this.title = title;
+        this.vnsUrl = vnsUrl;
+        this.lectionUrl = lectionUrl;
+        this.praktUrl = praktUrl;
+        this.labUrl = labUrl;
+    }
 
-//    @OneToMany(mappedBy = "task_id")
+    public Subject(Integer id, @NonNull String title, String vnsUrl, String lectionUrl, String praktUrl, String labUrl) {
+        this.id = id;
+        this.title = title;
+        this.vnsUrl = vnsUrl;
+        this.lectionUrl = lectionUrl;
+        this.praktUrl = praktUrl;
+        this.labUrl = labUrl;
+    }
+    //    @OneToMany(mappedBy = "task_id")
 //    private List<Task> taskById;
 
 }
