@@ -26,6 +26,7 @@ create sequence subjects_start12 start with 12 increment by 1;
 create sequence tasks_start8 start with 8 increment by 1;
 
 -- change exactly in the database sequences
+
 -- ---- auto-generated definition
 -- create sequence roles_start3 start with 3 increment by 1;
 --
