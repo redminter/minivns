@@ -12,8 +12,8 @@ import java.util.List;
 @EqualsAndHashCode(of = {"id", "name"})
 public class Role {
     @NonNull
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @SequenceGenerator(name = "roles_start3", initialValue = 3)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "roles_start3")
+    @SequenceGenerator(name = "roles_start3", allocationSize = 1)
     @Id
     @Column(name = "id")
     private Integer id;

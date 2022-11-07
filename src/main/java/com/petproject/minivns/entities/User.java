@@ -1,9 +1,6 @@
 package com.petproject.minivns.entities;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
@@ -15,8 +12,8 @@ import java.util.List;
 @EqualsAndHashCode(of = {"id", "name"})
 public class User {
     @NonNull
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @SequenceGenerator(name = "users_start7", initialValue = 7)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_start7")
+    @SequenceGenerator(name = "users_start7", allocationSize = 1)
     @Id
     @Column(name = "id")
     private Integer id;
@@ -43,13 +40,36 @@ public class User {
 
 //    @ManyToMany(mappedBy = "usersByUserId")
 //    private List<Subject> subjectById;
-//
+
 //    @OneToMany(mappedBy = "usersByUserId")
 //    private List<Task> taskById;
-//
+
     @NonNull
     @ManyToOne
     @JoinColumn(name = "role_id", referencedColumnName = "id")
     private Role role_Id;
 
+    public User(@NonNull String firstName, @NonNull String lastName, @NonNull String email, @NonNull String password, @NonNull Role role_Id) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.role_Id = role_Id;
+    }
+
+    public User(@NonNull Integer id, @NonNull String firstName, @NonNull String lastName, @NonNull String email, @NonNull String password) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.role_Id = role_Id;
+    }
+
+    public User(@NonNull String firstName, @NonNull String lastName, @NonNull String email, @NonNull String password) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+    }
 }
