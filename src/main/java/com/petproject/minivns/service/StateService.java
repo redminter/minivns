@@ -5,7 +5,7 @@ import com.petproject.minivns.entities.State;
 import java.util.List;
 
 public interface StateService {
-    State addState(State state);
+    State create(State state);
 
     List<State> getAll();
 

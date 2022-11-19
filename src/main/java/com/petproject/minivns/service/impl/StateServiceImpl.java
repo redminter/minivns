@@ -2,13 +2,14 @@ package com.petproject.minivns.service.impl;
 
 import com.petproject.minivns.entities.State;
 import com.petproject.minivns.repositories.StateRepository;
+import com.petproject.minivns.service.StateService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class StateServiceImpl implements com.petproject.minivns.service.StateService {
+public class StateServiceImpl implements StateService {
     private final StateRepository stateRepository;
 
     public StateServiceImpl(StateRepository stateRepository) {
@@ -16,7 +17,7 @@ public class StateServiceImpl implements com.petproject.minivns.service.StateSer
     }
 
     @Override
-    public State addState(State state){
+    public State create(State state){
         return stateRepository.save(state);
     }
 

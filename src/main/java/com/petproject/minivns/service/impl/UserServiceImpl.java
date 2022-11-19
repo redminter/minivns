@@ -21,7 +21,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User addUser(User user) {
+    public User create(User user) {
         if(user.getRole_Id()==null){
             user.setRole_Id(roleService.getById(2));
         }

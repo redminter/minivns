@@ -7,6 +7,7 @@ import lombok.NonNull;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -53,7 +54,9 @@ public class Subject {
         this.praktUrl = praktUrl;
         this.labUrl = labUrl;
     }
-    //    @OneToMany(mappedBy = "task_id")
+
+
+//    @OneToMany(mappedBy = "task_id")
 //    private List<Task> taskById;
 
 }

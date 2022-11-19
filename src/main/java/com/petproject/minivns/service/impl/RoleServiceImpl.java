@@ -2,13 +2,14 @@ package com.petproject.minivns.service.impl;
 
 import com.petproject.minivns.entities.Role;
 import com.petproject.minivns.repositories.RoleRepository;
+import com.petproject.minivns.service.RoleService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class RoleServiceImpl implements com.petproject.minivns.service.RoleService {
+public class RoleServiceImpl implements RoleService {
     private final RoleRepository roleRepository;
 
     public RoleServiceImpl(RoleRepository roleRepository) {
@@ -16,7 +17,7 @@ public class RoleServiceImpl implements com.petproject.minivns.service.RoleServi
     }
 
     @Override
-    public Role addRole(Role role){
+    public Role create(Role role){
             return roleRepository.save(role);
     }
 

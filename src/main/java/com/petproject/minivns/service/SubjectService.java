@@ -6,7 +6,7 @@ import com.petproject.minivns.entities.User;
 import java.util.List;
 
 public interface SubjectService {
-    Subject addSubject(Subject subject);
+    Subject create(Subject subject);
 
     List<Subject> getAll();
 
