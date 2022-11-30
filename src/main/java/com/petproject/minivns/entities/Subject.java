@@ -6,15 +6,12 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
 @Entity
 @Table(name = "subjects")
-@EqualsAndHashCode(of = {"id", "name"})
+@EqualsAndHashCode(of = {"id", "title"})
 public class Subject {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "subjects_start12")
     @SequenceGenerator(name = "subjects_start12", allocationSize = 1)

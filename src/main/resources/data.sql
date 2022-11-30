@@ -8,11 +8,11 @@ INSERT INTO users (id, first_name, last_name, email, password, role_id) VALUES (
 INSERT INTO states (id, name) VALUES (5, 'Not Done');
 INSERT INTO states (id, name) VALUES (6, 'Done');
 
-INSERT INTO subjects (id, title,user_id,vns_url,lection_url,prakt_url,lab_url) VALUES (7, 'Mike''s To-Do #1',4 ,'vns_url','lection_url','prakt_url','lab_url');
-INSERT INTO subjects (id, title,user_id,vns_url,lection_url,prakt_url,lab_url) VALUES (8, 'Mike''s To-Do #2',4 ,'vns_url','lection_url','prakt_url','lab_url');
-INSERT INTO subjects (id, title,user_id,vns_url,lection_url,prakt_url,lab_url) VALUES (9, 'Mike''s To-Do #3',4 ,'vns_url','lection_url','prakt_url','lab_url');
-INSERT INTO subjects (id, title,user_id,vns_url,lection_url,prakt_url,lab_url) VALUES (10, 'Nick''s To-Do #1',5,'vns_url','lection_url','prakt_url','lab_url');
-INSERT INTO subjects (id, title,user_id,vns_url,lection_url,prakt_url,lab_url) VALUES (11, 'Nick''s To-Do #2',5,'vns_url','lection_url','prakt_url','lab_url');
+INSERT INTO subjects (id, title,vns_url,lection_url,prakt_url,lab_url) VALUES (7, 'Mike''s To-Do #1','vns_url','lection_url','prakt_url','lab_url');
+INSERT INTO subjects (id, title,vns_url,lection_url,prakt_url,lab_url) VALUES (8, 'Mike''s To-Do #2','vns_url','lection_url','prakt_url','lab_url');
+INSERT INTO subjects (id, title,vns_url,lection_url,prakt_url,lab_url) VALUES (9, 'Mike''s To-Do #3','vns_url','lection_url','prakt_url','lab_url');
+INSERT INTO subjects (id, title,vns_url,lection_url,prakt_url,lab_url) VALUES (10, 'Nick''s To-Do #1','vns_url','lection_url','prakt_url','lab_url');
+INSERT INTO subjects (id, title,vns_url,lection_url,prakt_url,lab_url) VALUES (11, 'Nick''s To-Do #2','vns_url','lection_url','prakt_url','lab_url');
 
 INSERT INTO tasks (id, title, subject_id,link,deadline,state_id,user_id) VALUES (6, 'Task #2', 7,'linkedIN','2022-11-16 14:00:04.810221', 5, 5);
 INSERT INTO tasks (id, title, subject_id,link,deadline,state_id,user_id) VALUES (5, 'Task #1', 7,'linkedIN','2022-11-15 14:00:11.480271', 5, 6);
