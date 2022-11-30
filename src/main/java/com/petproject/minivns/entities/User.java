@@ -9,13 +9,12 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "users")
-@EqualsAndHashCode(of = {"id", "name"})
+@EqualsAndHashCode(of = {"id", "firstName", "lastName"})
 public class User {
-    @NonNull
+    @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_start7")
     @SequenceGenerator(name = "users_start7", allocationSize = 1)
-    @Id
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     private Integer id;
 
     @NonNull
@@ -63,7 +62,6 @@ public class User {
         this.lastName = lastName;
         this.email = email;
         this.password = password;
-        this.role_Id = role_Id;
     }
 
     public User(@NonNull String firstName, @NonNull String lastName, @NonNull String email, @NonNull String password) {

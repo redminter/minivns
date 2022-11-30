@@ -9,13 +9,12 @@ import javax.validation.constraints.NotBlank;
 @Data
 public class UserRequest {
     @NotBlank(message = "The first name cannot be empty")
-    private String firstName;
+    private String first_name;
     @NotBlank(message = "The last name cannot be empty")
-    private String lastName;
+    private String last_name;
     @NotBlank(message = "The email cannot be empty")
     private String email;
     @NotBlank(message = "The password cannot be empty")
     private String password;
-    @NotBlank(message = "The role_id cannot be empty")
-    private Role role_Id;
+    private Integer role_Id;
 }

@@ -4,6 +4,7 @@ import com.petproject.minivns.entities.User;
 import com.petproject.minivns.json.UserRequest;
 import com.petproject.minivns.json.UserResponse;
 
+import com.petproject.minivns.service.RoleService;
 import com.petproject.minivns.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,13 +20,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/users")
 public class UserController {
     final UserService userService;
+    final RoleService roleService;
 
-
-    public UserController(UserService userService) {
+    public UserController(UserService userService, RoleService roleService) {
         this.userService = userService;
+        this.roleService = roleService;
     }
 
     @GetMapping
@@ -36,13 +38,14 @@ public class UserController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> create(@Validated @RequestBody UserRequest userRequest, BindingResult result){
-        if(result.hasErrors()){ throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Some data is bad entered");}
+//        if(result.hasErrors()){ throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Some data is bad entered");}
         User newUser = new User();
-        newUser.setFirstName(userRequest.getFirstName());
-        newUser.setLastName(userRequest.getLastName());
+
+        newUser.setFirstName(userRequest.getFirst_name());
+        newUser.setLastName(userRequest.getLast_name());
         newUser.setEmail(userRequest.getEmail());
         newUser.setPassword(userRequest.getPassword());
-        newUser.setRole_Id(userRequest.getRole_Id());
+        newUser.setRole_Id(roleService.getById(userRequest.getRole_Id()));
         userService.create(newUser);
 
         URI location = ServletUriComponentsBuilder
@@ -63,11 +66,11 @@ public class UserController {
     @ResponseStatus ( HttpStatus.OK )
     public ResponseEntity<?> update(@PathVariable("user_id") Integer user_id, @Valid @RequestBody UserRequest userRequest) {
         User user = userService.getById(user_id);
-        user.setFirstName(userRequest.getFirstName());
-        user.setLastName(userRequest.getLastName());
+        user.setFirstName(userRequest.getFirst_name());
+        user.setLastName(userRequest.getLast_name());
         user.setEmail(userRequest.getEmail());
         user.setPassword(userRequest.getPassword());
-        user.setRole_Id(userRequest.getRole_Id());
+        user.setRole_Id(roleService.getById(userRequest.getRole_Id()));
         userService.update(user);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
