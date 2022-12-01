@@ -67,4 +67,9 @@ public class TaskServiceImpl implements TaskService {
             throw new RuntimeException("Task is null or not found and cannot be deleted");
         }
     }
+
+    @Override
+    public List<Task> getAllByUser_id(Integer id) {
+        return taskRepository.getAllByUser_id(id);
+    }
 }

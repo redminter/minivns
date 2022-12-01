@@ -38,7 +38,7 @@ public class UserController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> create(@Validated @RequestBody UserRequest userRequest, BindingResult result){
-//        if(result.hasErrors()){ throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Some data is bad entered");}
+        if(result.hasErrors()){ throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Some data is bad entered");}
         User newUser = new User();
 
         newUser.setFirstName(userRequest.getFirst_name());
