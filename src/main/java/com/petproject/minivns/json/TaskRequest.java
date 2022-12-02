@@ -1,5 +1,6 @@
 package com.petproject.minivns.json;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.petproject.minivns.entities.State;
 import com.petproject.minivns.entities.Subject;
 import com.petproject.minivns.entities.User;
@@ -17,10 +18,10 @@ public class TaskRequest {
     String link;
 
     LocalDateTime deadline;
+    @JsonProperty("subject_by_subject_id")
+    Integer subjectBySubjectId;
+    @JsonProperty("state_by_state_id")
+    Integer stateByStateId;
 
-    Subject subjectBySubjectId;
-
-    State stateByStateId;
-
-    User user_id;
+//    User user_id;
 }

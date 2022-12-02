@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -53,13 +52,14 @@ public class Task {
         this.deadline = deadline;
     }
 
-    public Task(@NonNull String title, String link, LocalDateTime deadline, @NonNull Subject subjectBySubjectId, @NonNull State stateByStateId, @NonNull User user_id) {
+    public Task(@NonNull String title, String link, LocalDateTime deadline, @NonNull Subject subjectBySubjectId, @NonNull State stateByStateId, @NonNull User user
+    ) {
         this.title = title;
         this.link = link;
         this.deadline = deadline;
         this.subjectBySubjectId = subjectBySubjectId;
         this.stateByStateId = stateByStateId;
-        this.user_id = user_id;
+        this.user = user;
     }
 
 //    @NonNull
@@ -76,5 +76,5 @@ public class Task {
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user_id;
+    private User user;
 }

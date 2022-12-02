@@ -16,5 +16,8 @@ public interface TaskService {
 
     void delete(Integer id);
 
+
     List<Task> getAllByUser_id(Integer id);
+
+    List<Task> getAllBySubject_id(Integer id);
 }

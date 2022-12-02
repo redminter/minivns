@@ -51,7 +51,7 @@ public class TaskServiceImpl implements TaskService {
             getById(task.getId()).setDeadline(task.getDeadline());
             getById(task.getId()).setTitle(task.getTitle());
             task.setStateByStateId(getById(task.getId()).getStateByStateId());
-            task.setUser_id(getById(task.getId()).getUser_id());
+            task.setUser(getById(task.getId()).getUser());
             task.setSubjectBySubjectId(getById(task.getId()).getSubjectBySubjectId());
             return taskRepository.save(task);
         }
@@ -70,6 +70,10 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<Task> getAllByUser_id(Integer id) {
-        return taskRepository.getAllByUser_id(id);
+        return taskRepository.getTasksByUser_id(id);
+    }
+    @Override
+    public List<Task> getAllBySubject_id(Integer id) {
+        return taskRepository.getTasksBySubjectBySubjectId(id);
     }
 }
