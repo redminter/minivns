@@ -1,6 +1,7 @@
 package com.petproject.minivns.json;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.petproject.minivns.entities.Role;
 import lombok.Data;
 
@@ -16,5 +17,7 @@ public class UserRequest {
     private String email;
     @NotBlank(message = "The password cannot be empty")
     private String password;
+
+    @JsonProperty("role_id")
     private Integer role_Id;
 }

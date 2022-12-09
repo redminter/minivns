@@ -6,6 +6,7 @@ import com.petproject.minivns.repositories.SubjectRepository;
 import com.petproject.minivns.repositories.TaskRepository;
 import com.petproject.minivns.repositories.UserRepository;
 import com.petproject.minivns.service.TaskService;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.stream.Collectors;
 public class TaskServiceImpl implements TaskService {
     private final TaskRepository taskRepository;
 
-    public TaskServiceImpl(TaskRepository taskRepository, StateRepository stateRepository, UserRepository userRepository, SubjectRepository subjectRepository) {
+    public TaskServiceImpl(TaskRepository taskRepository) {
         this.taskRepository = taskRepository;
     }
 
