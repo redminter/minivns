@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 @RestController
-@RequestMapping("users/{user_id}/subjects/{subject_id}")
+@RequestMapping("users/{user_id}/")
 public class TaskController {
     final TaskService taskService;
     final UserService userService;
@@ -47,8 +47,31 @@ public class TaskController {
                 .map(TaskResponse::new)
                 .collect(Collectors.toList());
     }
-    @GetMapping("/tasks")
+    @GetMapping("subjects/{subject_id}/tasks")
     List<TaskResponse> getAllBySubject(@PathVariable("user_id") Integer userId, @PathVariable("subject_id") Integer subjectId ) {
+        try {
+            userService.getById(userId);
+        }catch (RuntimeException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no user with that id");
+        }
+        try {
+            subjectService.getById(subjectId);
+        }catch (RuntimeException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no subject with that id");
+        }
+        try {
+            return taskService.getAllBySubject_id(userId, subjectId).stream()
+                    .map(TaskResponse::new)
+                    .collect(Collectors.toList());
+        }catch (RuntimeException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no subject with that id available fo that user");
+
+        }
+    }
+
+    @PostMapping("subjects/{subject_id}/tasks")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<?> create(@PathVariable("user_id") Integer userId,@PathVariable("subject_id") Integer subjectId, @Validated @RequestBody TaskRequest taskRequest, BindingResult result){
         try {
             userService.getById(userId);
         }catch (RuntimeException e){
@@ -56,16 +79,8 @@ public class TaskController {
         }try {
             subjectService.getById(subjectId);
         }catch (RuntimeException e){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no user with that id");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no subject with that id");
         }
-        return taskService.getAllBySubject_id(userId, subjectId).stream()
-                .map(TaskResponse::new)
-                .collect(Collectors.toList());
-    }
-
-    @PostMapping("/tasks")
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> create(@PathVariable("user_id") Integer userId,@PathVariable("user_id") Integer subjectId, @Validated @RequestBody TaskRequest taskRequest, BindingResult result){
         if(result.hasErrors()){ throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Some data is bad entered");}
         Task newTask = new Task();
 
@@ -78,7 +93,7 @@ public class TaskController {
         if(!(taskRequest.getDeadline()==null)){
         newTask.setDeadline(taskRequest.getDeadline());}
         else{
-            newTask.setDeadline(LocalDateTime.of(0, 0, 0, 0, 0));
+            newTask.setDeadline(LocalDateTime.of(1, 1, 1, 1, 1));
         }
         newTask.setStateByStateId(stateService.getById(5));
         newTask.setUser(userService.getById(userId));
@@ -94,8 +109,17 @@ public class TaskController {
                 .body(new TaskResponse(newTask) );
     }
 
-    @GetMapping("/tasks/{task_id}")
-    public TaskResponse getOne(@PathVariable("task_id") Integer taskId) {
+    @GetMapping("subjects/{subject_id}/tasks/{task_id}")
+    public TaskResponse getOne(@PathVariable("user_id") Integer userId,@PathVariable("subject_id") Integer subjectId, @PathVariable("task_id") Integer taskId) {
+        try {
+            userService.getById(userId);
+        }catch (RuntimeException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no user with that id");
+        }try {
+            subjectService.getById(subjectId);
+        }catch (RuntimeException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no subject with that id");
+        }
         try {
             return new TaskResponse(taskService.getById(taskId));
         }catch (RuntimeException e){
@@ -103,13 +127,18 @@ public class TaskController {
         }
     }
 
-    @PutMapping({"/tasks/{task_id}"})
+    @PutMapping({"subjects/{subject_id}/tasks/{task_id}"})
     @ResponseStatus ( HttpStatus.OK )
     public ResponseEntity<?> update(@PathVariable("user_id") Integer userId,@PathVariable("subject_id") Integer subjectId, @PathVariable("task_id") Integer taskId, @Valid @RequestBody TaskRequest taskRequest, BindingResult result) {
         try {
             taskService.getById(taskId);
         }catch (RuntimeException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no task with that id");
+        }
+        try {
+            subjectService.getById(subjectId);
+        }catch (RuntimeException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no subject with that id");
         }
         if(result.hasErrors()){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Some data is bad entered");
@@ -124,7 +153,7 @@ public class TaskController {
         if(!(taskRequest.getDeadline()==null)){
             updatedTask.setDeadline(taskRequest.getDeadline());}
         else{
-            updatedTask.setDeadline(LocalDateTime.of(0, 0, 0, 0, 0));
+            updatedTask.setDeadline(LocalDateTime.of(1, 1, 1, 1, 1));
         }
         updatedTask.setStateByStateId(stateService.getById(5));
         updatedTask.setUser(userService.getById(userId));
@@ -140,7 +169,7 @@ public class TaskController {
                 .body(new TaskResponse(updatedTask));
     }
 
-    @DeleteMapping("/tasks/{task_id}")
+    @DeleteMapping("subjects/{subject_id}/tasks/{task_id}")
     @ResponseStatus ( HttpStatus.NO_CONTENT )
     void delete (@PathVariable("task_id") Integer task_id) {
         try {
@@ -148,5 +177,6 @@ public class TaskController {
         }catch(RuntimeException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no user with that id");
         }
+
     }
 }

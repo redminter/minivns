@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class TaskServiceImpl implements TaskService {
@@ -69,6 +70,12 @@ public class TaskServiceImpl implements TaskService {
     }
     @Override
     public List<Task> getAllBySubject_id(Integer userId, Integer subjectId) {
-        return taskRepository.getTasksByUser_id(userId).stream().filter(p->p.getSubjectBySubjectId().getId().equals(subjectId)).collect(Collectors.toList());
+        List<Task> list = taskRepository.getTasksByUser_id(userId).stream().filter(p -> p.getSubjectBySubjectId().getId().equals(subjectId)).toList();
+        if (!(list.isEmpty())) {
+            return list;
+        }
+        else{
+            throw new RuntimeException();
+        }
     }
 }
