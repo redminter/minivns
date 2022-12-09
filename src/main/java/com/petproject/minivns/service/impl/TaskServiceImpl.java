@@ -14,15 +14,9 @@ import java.util.stream.Collectors;
 @Service
 public class TaskServiceImpl implements TaskService {
     private final TaskRepository taskRepository;
-    private final StateRepository stateRepository;
-    private final UserRepository userRepository;
-    private final SubjectRepository subjectRepository;
 
     public TaskServiceImpl(TaskRepository taskRepository, StateRepository stateRepository, UserRepository userRepository, SubjectRepository subjectRepository) {
         this.taskRepository = taskRepository;
-        this.stateRepository = stateRepository;
-        this.userRepository = userRepository;
-        this.subjectRepository = subjectRepository;
     }
 
     @Override
@@ -45,7 +39,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public Task update(Task task) {
         List<Integer> ids = getAll().stream()
-                .map(Task::getId).collect(Collectors.toList());
+                .map(Task::getId).toList();
         if (task != null && ids.contains(task.getId())) {
             getById(task.getId()).setLink(task.getLink());
             getById(task.getId()).setDeadline(task.getDeadline());
@@ -73,7 +67,7 @@ public class TaskServiceImpl implements TaskService {
         return taskRepository.getTasksByUser_id(id);
     }
     @Override
-    public List<Task> getAllBySubject_id(Integer id) {
-        return taskRepository.getTasksBySubjectBySubjectId(id);
+    public List<Task> getAllBySubject_id(Integer userId, Integer subjectId) {
+        return taskRepository.getTasksByUser_id(userId).stream().filter(p->p.getSubjectBySubjectId().getId().equals(subjectId)).collect(Collectors.toList());
     }
 }

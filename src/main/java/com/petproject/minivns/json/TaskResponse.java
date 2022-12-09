@@ -23,7 +23,7 @@ public class TaskResponse {
 
      LocalDateTime deadline;
     @JsonProperty("subject_by_subject_id")
-     private Subject subjectBySubjectId;
+     Subject subjectBySubjectId;
     @JsonProperty("state_by_state_id")
      State stateByStateId;
 

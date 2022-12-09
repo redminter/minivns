@@ -19,5 +19,5 @@ public interface TaskService {
 
     List<Task> getAllByUser_id(Integer id);
 
-    List<Task> getAllBySubject_id(Integer id);
+    List<Task> getAllBySubject_id(Integer userId, Integer subjectId);
 }
