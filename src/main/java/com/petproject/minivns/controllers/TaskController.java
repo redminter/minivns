@@ -41,8 +41,8 @@ public class TaskController {
                 .collect(Collectors.toList());
     }
     @GetMapping("subjects/{subject_id}/tasks")
-    List<TaskResponse> getAllBySubject(@PathVariable("subject_id") Integer subject_id ) {
-        return taskService.getAllBySubject_id(subject_id).stream()
+    List<TaskResponse> getAllBySubject(@PathVariable("user_id") Integer userId, @PathVariable("subject_id") Integer subjectId ) {
+        return taskService.getAllBySubject_id(userId, subjectId).stream()
                 .map(TaskResponse::new)
                 .collect(Collectors.toList());
     }
