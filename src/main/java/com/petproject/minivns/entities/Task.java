@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Entity
 @Table(name = "tasks")
-@EqualsAndHashCode(of = {"id", "name"})
+@EqualsAndHashCode(of = {"id", "title"})
 public class Task {
     @NonNull
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tasks_start8")
@@ -35,9 +35,8 @@ public class Task {
     @Column(name = "deadline")
     private LocalDateTime deadline;
 
-//    @NonNull
-//    @Column(name = "state_id")
-//    private int stateId;
+    @Column(name = "is_done")
+    private Boolean isDone;
 
     public Task(@NonNull String title, String link, LocalDateTime deadline) {
         this.title = title;
@@ -52,13 +51,12 @@ public class Task {
         this.deadline = deadline;
     }
 
-    public Task(@NonNull String title, String link, LocalDateTime deadline, @NonNull Subject subjectBySubjectId, @NonNull State stateByStateId, @NonNull User user
-    ) {
+    public Task(@NonNull String title, String link, LocalDateTime deadline, @NonNull Subject subjectBySubjectId, @NonNull User user) {
         this.title = title;
         this.link = link;
         this.deadline = deadline;
         this.subjectBySubjectId = subjectBySubjectId;
-        this.stateByStateId = stateByStateId;
+        this.isDone =false;
         this.user = user;
     }
 
@@ -70,9 +68,6 @@ public class Task {
     @JoinColumn(name = "subject_id", referencedColumnName = "id")
     private Subject subjectBySubjectId;
 
-    @ManyToOne
-    @JoinColumn(name = "state_id", referencedColumnName = "id")
-    private State stateByStateId;
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")

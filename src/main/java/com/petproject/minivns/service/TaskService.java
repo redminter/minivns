@@ -15,7 +15,7 @@ public interface TaskService {
     Task update(Task task);
 
     void delete(Integer id);
-
+    void changeState(Integer id);
 
     List<Task> getAllByUser_id(Integer id);
 

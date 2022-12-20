@@ -1,9 +1,6 @@
 package com.petproject.minivns.json;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.petproject.minivns.entities.State;
-import com.petproject.minivns.entities.Subject;
-import com.petproject.minivns.entities.User;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -18,8 +15,9 @@ public class TaskRequest {
     String link;
 
     LocalDateTime deadline;
-    @JsonProperty("subject_by_subject_id")
-    Integer subjectBySubjectId;
+
+    @JsonProperty("is_done")
+    Boolean isDone;
     @JsonProperty("state_by_state_id")
     Integer stateByStateId;
 

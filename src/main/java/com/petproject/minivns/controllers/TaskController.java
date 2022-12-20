@@ -3,8 +3,6 @@ package com.petproject.minivns.controllers;
 import com.petproject.minivns.entities.Task;
 import com.petproject.minivns.json.TaskRequest;
 import com.petproject.minivns.json.TaskResponse;
-import com.petproject.minivns.json.UserResponse;
-import com.petproject.minivns.service.StateService;
 import com.petproject.minivns.service.SubjectService;
 import com.petproject.minivns.service.TaskService;
 import com.petproject.minivns.service.UserService;
@@ -26,13 +24,11 @@ import java.util.stream.Collectors;
 public class TaskController {
     final TaskService taskService;
     final UserService userService;
-    final StateService stateService;
     final SubjectService subjectService;
 
-    public TaskController(TaskService taskService, UserService userService, StateService stateService, SubjectService subjectService) {
+    public TaskController(TaskService taskService, UserService userService, SubjectService subjectService) {
         this.taskService = taskService;
         this.userService = userService;
-        this.stateService = stateService;
         this.subjectService = subjectService;
     }
 
@@ -95,7 +91,7 @@ public class TaskController {
         else{
             newTask.setDeadline(LocalDateTime.of(1, 1, 1, 1, 1));
         }
-        newTask.setStateByStateId(stateService.getById(5));
+        newTask.setIsDone(false);
         newTask.setUser(userService.getById(userId));
         newTask.setSubjectBySubjectId(subjectService.getById(subjectId));
         taskService.create(newTask);
@@ -155,7 +151,7 @@ public class TaskController {
         else{
             updatedTask.setDeadline(LocalDateTime.of(1, 1, 1, 1, 1));
         }
-        updatedTask.setStateByStateId(stateService.getById(5));
+        updatedTask.setIsDone(taskRequest.getIsDone());
         updatedTask.setUser(userService.getById(userId));
         updatedTask.setSubjectBySubjectId(subjectService.getById(subjectId));
         taskService.update(updatedTask);
@@ -171,12 +167,41 @@ public class TaskController {
 
     @DeleteMapping("subjects/{subject_id}/tasks/{task_id}")
     @ResponseStatus ( HttpStatus.NO_CONTENT )
-    void delete (@PathVariable("task_id") Integer task_id) {
+    void delete (@PathVariable("task_id") Integer task_id, @PathVariable Integer subject_id, @PathVariable Integer user_id) {
+        try {
+            subjectService.getById(subject_id);
+        }catch (RuntimeException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no subject with that id "+ subject_id);
+        }
+        try {
+            userService.getById(user_id);
+        }catch (RuntimeException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no user with that id "+user_id);
+        }
         try {
             taskService.delete(task_id);
         }catch(RuntimeException e){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no user with that id");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no task with that id "+task_id);
         }
-
     }
+
+    @PatchMapping("subjects/{subject_id}/tasks/{task_id}")
+    @ResponseStatus(HttpStatus.OK)
+    void changeStatus(@PathVariable("task_id") Integer task_id, @PathVariable Integer subject_id, @PathVariable Integer user_id){
+    try {
+        subjectService.getById(subject_id);
+    }catch (RuntimeException e){
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no subject with that id "+ subject_id);
+    }
+    try {
+        userService.getById(user_id);
+    }catch (RuntimeException e){
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no user with that id "+user_id);
+    }
+    try {
+        taskService.changeState(task_id);
+    }catch(RuntimeException e){
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no task with that id "+task_id);
+    }
+}
 }

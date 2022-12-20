@@ -1,17 +1,11 @@
 package com.petproject.minivns.service.impl;
 
 import com.petproject.minivns.entities.Task;
-import com.petproject.minivns.repositories.StateRepository;
-import com.petproject.minivns.repositories.SubjectRepository;
 import com.petproject.minivns.repositories.TaskRepository;
-import com.petproject.minivns.repositories.UserRepository;
 import com.petproject.minivns.service.TaskService;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class TaskServiceImpl implements TaskService {
@@ -46,7 +40,7 @@ public class TaskServiceImpl implements TaskService {
             getById(task.getId()).setLink(task.getLink());
             getById(task.getId()).setDeadline(task.getDeadline());
             getById(task.getId()).setTitle(task.getTitle());
-            task.setStateByStateId(getById(task.getId()).getStateByStateId());
+            task.setIsDone(getById(task.getId()).getIsDone());
             task.setUser(getById(task.getId()).getUser());
             task.setSubjectBySubjectId(getById(task.getId()).getSubjectBySubjectId());
             return taskRepository.save(task);
@@ -76,6 +70,17 @@ public class TaskServiceImpl implements TaskService {
         }
         else{
             throw new RuntimeException();
+        }
+    }
+    @Override
+    public void changeState(Integer id){
+        Task task = getById(id);
+        if(task != null && getAll().contains(task)) {
+            task.setIsDone(!(task.getIsDone()));
+            taskRepository.save(task);
+        }
+        else{
+            throw new RuntimeException("There is no task with id " + id);
         }
     }
 }

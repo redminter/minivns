@@ -3,7 +3,6 @@ package com.petproject.minivns.json;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import com.petproject.minivns.entities.State;
 import com.petproject.minivns.entities.Subject;
 import com.petproject.minivns.entities.Task;
 import com.petproject.minivns.entities.User;
@@ -24,8 +23,8 @@ public class TaskResponse {
      LocalDateTime deadline;
     @JsonProperty("subject_by_subject_id")
      Subject subjectBySubjectId;
-    @JsonProperty("state_by_state_id")
-     State stateByStateId;
+    @JsonProperty("is_done")
+     Boolean isDone;
 
      User user;
 
@@ -35,7 +34,7 @@ public class TaskResponse {
         this.link = task.getLink();
         this.deadline = task.getDeadline();
         this.subjectBySubjectId = task.getSubjectBySubjectId();
-        this.stateByStateId = task.getStateByStateId();
+        this.isDone = task.getIsDone();
         this.user = task.getUser();
     }
 }
