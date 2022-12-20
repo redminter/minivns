@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import javax.persistence.*;
+import java.util.Map;
 
 @Data
 @NoArgsConstructor
@@ -35,6 +36,20 @@ public class Subject {
     @Column(name = "lab_url")
     private String labUrl;
 
+    @Column(name ="at_monday")
+    private boolean atMonday;
+
+    @Column(name ="at_tuesday")
+    private boolean atTuesday;
+
+    @Column(name ="at_wednesday")
+    private boolean atWednesday;
+
+    @Column(name ="at_thursday")
+    private boolean atThursday;
+
+    @Column(name ="at_friday")
+    private boolean atFriday;
     public Subject(@NonNull String title, String vnsUrl, String lectionUrl, String praktUrl, String labUrl) {
         this.title = title;
         this.vnsUrl = vnsUrl;
@@ -52,7 +67,18 @@ public class Subject {
         this.labUrl = labUrl;
     }
 
-
+    public Subject(@NonNull String title, String vnsUrl, String lectionUrl, String praktUrl, String labUrl, boolean atMonday, boolean atTuesday, boolean atWednesday, boolean atThursday, boolean atFriday) {
+        this.title = title;
+        this.vnsUrl = vnsUrl;
+        this.lectionUrl = lectionUrl;
+        this.praktUrl = praktUrl;
+        this.labUrl = labUrl;
+        this.atMonday = atMonday;
+        this.atTuesday = atTuesday;
+        this.atWednesday = atWednesday;
+        this.atThursday = atThursday;
+        this.atFriday = atFriday;
+    }
 //    @OneToMany(mappedBy = "task_id")
 //    private List<Task> taskById;
 

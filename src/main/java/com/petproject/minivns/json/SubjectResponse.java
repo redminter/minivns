@@ -15,12 +15,21 @@ public class SubjectResponse {
      String lab_url;
      String lection_url;
 
-
+//     boolean at_monday;
+//     boolean at_tuesday;
+//     boolean at_wednesday;
+//     boolean at_thursday;
+//     boolean at_friday;
     public SubjectResponse(Subject subject) {
         this.title = subject.getTitle();
         this.vns_url = subject.getVnsUrl();
         this.pract_url = subject.getPraktUrl();
         this.lab_url = subject.getLabUrl();
         this.lection_url = subject.getLectionUrl();
+//        at_monday = subject.isAtMonday();
+//        at_tuesday = subject.isAtTuesday();
+//        at_wednesday = subject.isAtWednesday();
+//        at_thursday = subject.isAtThursday();
+//        at_friday = subject.isAtFriday();
     }
 }

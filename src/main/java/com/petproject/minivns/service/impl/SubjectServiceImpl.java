@@ -5,6 +5,8 @@ import com.petproject.minivns.repositories.SubjectRepository;
 import com.petproject.minivns.service.SubjectService;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,11 +35,22 @@ public class SubjectServiceImpl implements SubjectService {
         );
     }
 
+    public List<Subject> getSchedule(LocalDateTime localDateTime)
+    {
+        return switch(localDateTime.getDayOfWeek()){
+            case MONDAY -> subjectRepository.getAllByAtMondayIsTrue();
+            case TUESDAY -> subjectRepository.getAllByAtTuesdayIsTrue();
+            case WEDNESDAY -> subjectRepository.getAllByAtWednesdayIsTrue();
+            case THURSDAY -> subjectRepository.getAllByAtThursdayIsTrue();
+            case FRIDAY, SATURDAY, SUNDAY-> subjectRepository.getAllByAtFridayIsTrue();
+        };
+    }
+
     //todo implement updating certain field
     @Override
     public Subject update(Subject subject) {
         List<Integer> ids = getAll().stream()
-                .map(Subject::getId).collect(Collectors.toList());
+                .map(Subject::getId).toList();
         if (subject != null && ids.contains(subject.getId())) {
             getById(subject.getId()).setTitle(subject.getTitle());
             getById(subject.getId()).setLabUrl(subject.getLabUrl());

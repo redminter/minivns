@@ -14,6 +14,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,7 +33,10 @@ public class SubjectController {
     public List<SubjectResponse> getAll(){
         return subjectService.getAll().stream().map(SubjectResponse::new).collect(Collectors.toList());
     }
-
+    @GetMapping("/schedule")
+    public List<SubjectResponse> getSchedule(){
+        return subjectService.getSchedule(LocalDateTime.now()).stream().map(SubjectResponse::new).collect(Collectors.toList());
+    }
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> create(@Validated @RequestBody SubjectRequest subjectRequest, BindingResult result){
@@ -55,6 +59,11 @@ public class SubjectController {
             newSubject.setLabUrl(subjectRequest.getLab_url());}
             else{
                 newSubject.setLabUrl("");}
+            newSubject.setAtMonday(subjectRequest.isAtMonday());
+            newSubject.setAtTuesday(subjectRequest.isAtTuesday());
+            newSubject.setAtWednesday(subjectRequest.isAtWednesday());
+            newSubject.setAtThursday(subjectRequest.isAtThursday());
+            newSubject.setAtFriday(subjectRequest.isAtFriday());
             subjectService.create(newSubject);
 
         URI location = ServletUriComponentsBuilder
@@ -96,7 +105,11 @@ public class SubjectController {
             updatedSubject.setLectionUrl(subjectRequest.getLection_url());}
         if(!(subjectRequest.getLab_url()==null)){
             updatedSubject.setLabUrl(subjectRequest.getLab_url());}
-
+        updatedSubject.setAtMonday(subjectRequest.isAtMonday());
+        updatedSubject.setAtTuesday(subjectRequest.isAtTuesday());
+        updatedSubject.setAtWednesday(subjectRequest.isAtWednesday());
+        updatedSubject.setAtThursday(subjectRequest.isAtThursday());
+        updatedSubject.setAtFriday(subjectRequest.isAtFriday());
         subjectService.update(updatedSubject);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
