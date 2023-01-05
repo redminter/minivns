@@ -8,6 +8,8 @@ import com.petproject.minivns.service.RoleService;
 import com.petproject.minivns.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -24,12 +26,16 @@ import java.util.stream.Collectors;
 public class UserController {
     final UserService userService;
     final RoleService roleService;
+    
+    final PasswordEncoder passwordEncoder;
 
-    public UserController(UserService userService, RoleService roleService) {
+
+    public UserController(UserService userService, RoleService roleService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.roleService = roleService;
+        this.passwordEncoder = passwordEncoder;
     }
-
+    //@PreAuthorize("isAuthenticated()")
     @GetMapping
     public List<UserResponse> getAll(){
         return userService.getAll().stream().map(UserResponse::new).collect(Collectors.toList());
@@ -46,7 +52,7 @@ public class UserController {
         newUser.setFirstName(userRequest.getFirst_name());
         newUser.setLastName(userRequest.getLast_name());
         newUser.setEmail(userRequest.getEmail());
-        newUser.setPassword(userRequest.getPassword());
+        newUser.setPassword(passwordEncoder.encode(userRequest.getPassword()));
         if(!(userRequest.getRole_Id()==null)) {
             newUser.setRole_Id(roleService.getById(userRequest.getRole_Id()));
         }
@@ -88,7 +94,7 @@ public class UserController {
         updatedUser.setFirstName(userRequest.getFirst_name());
         updatedUser.setLastName(userRequest.getLast_name());
         updatedUser.setEmail(userRequest.getEmail());
-        updatedUser.setPassword(userRequest.getPassword());
+        updatedUser.setPassword(passwordEncoder.encode(userRequest.getPassword()));
         updatedUser.setRole_Id(roleService.getById(userRequest.getRole_Id()));
         userService.update(updatedUser);
         URI location = ServletUriComponentsBuilder

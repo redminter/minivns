@@ -4,7 +4,11 @@ import com.petproject.minivns.entities.User;
 import com.petproject.minivns.repositories.UserRepository;
 import com.petproject.minivns.service.RoleService;
 import com.petproject.minivns.service.UserService;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -62,5 +66,14 @@ public class UserServiceImpl implements UserService {
         else{
             throw new RuntimeException("User is null or not found and cannot be deleted");
         }
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException{
+        User user = userRepository.findByEmail(username);
+        if(user==null){
+          throw new ResponseStatusException(HttpStatus.NO_CONTENT, "User with username "+username+" not found");
+        }
+        return user;
     }
 }

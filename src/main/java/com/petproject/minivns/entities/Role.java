@@ -1,6 +1,7 @@
 package com.petproject.minivns.entities;
 
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @Table(name = "roles")
 @EqualsAndHashCode(of = {"id", "name"})
-public class Role {
+public class Role implements GrantedAuthority {
     @NonNull
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "roles_start3")
     @SequenceGenerator(name = "roles_start3", allocationSize = 1)
@@ -29,5 +30,10 @@ public class Role {
     public Role(Integer id,String name){
         this.id = id;
         this.name = name;
+    }
+
+    @Override
+    public String getAuthority() {
+        return name;
     }
 }
