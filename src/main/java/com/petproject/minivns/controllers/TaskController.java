@@ -8,6 +8,7 @@ import com.petproject.minivns.service.TaskService;
 import com.petproject.minivns.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +33,7 @@ public class TaskController {
         this.subjectService = subjectService;
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN') or hasAnyRole('ROLE_USER') and authentication.principal.id == #userId")
     @GetMapping("/tasks")
     List<TaskResponse> getAllByUser(@PathVariable("user_id") Integer userId) {
         try {
@@ -43,6 +45,7 @@ public class TaskController {
                 .map(TaskResponse::new)
                 .collect(Collectors.toList());
     }
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN') or hasAnyRole('ROLE_USER') and authentication.principal.id == #userId")
     @GetMapping("subjects/{subject_id}/tasks")
     List<TaskResponse> getAllBySubject(@PathVariable("user_id") Integer userId, @PathVariable("subject_id") Integer subjectId ) {
         try {
@@ -64,7 +67,7 @@ public class TaskController {
 
         }
     }
-
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN') or hasAnyRole('ROLE_USER') and authentication.principal.id == #userId")
     @PostMapping("subjects/{subject_id}/tasks")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> create(@PathVariable("user_id") Integer userId,@PathVariable("subject_id") Integer subjectId, @Validated @RequestBody TaskRequest taskRequest, BindingResult result){
@@ -104,7 +107,7 @@ public class TaskController {
                 .created(location)
                 .body(new TaskResponse(newTask) );
     }
-
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN') or hasAnyRole('ROLE_USER') and authentication.principal.id == #userId")
     @GetMapping("subjects/{subject_id}/tasks/{task_id}")
     public TaskResponse getOne(@PathVariable("user_id") Integer userId,@PathVariable("subject_id") Integer subjectId, @PathVariable("task_id") Integer taskId) {
         try {
@@ -122,7 +125,7 @@ public class TaskController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no task with that id");
         }
     }
-
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN') or hasAnyRole('ROLE_USER') and authentication.principal.id == #userId")
     @PutMapping({"subjects/{subject_id}/tasks/{task_id}"})
     @ResponseStatus ( HttpStatus.OK )
     public ResponseEntity<?> update(@PathVariable("user_id") Integer userId,@PathVariable("subject_id") Integer subjectId, @PathVariable("task_id") Integer taskId, @Valid @RequestBody TaskRequest taskRequest, BindingResult result) {
@@ -164,19 +167,19 @@ public class TaskController {
                 .created(location)
                 .body(new TaskResponse(updatedTask));
     }
-
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN') or hasAnyRole('ROLE_USER') and authentication.principal.id == #userId")
     @DeleteMapping("subjects/{subject_id}/tasks/{task_id}")
     @ResponseStatus ( HttpStatus.NO_CONTENT )
-    void delete (@PathVariable("task_id") Integer task_id, @PathVariable Integer subject_id, @PathVariable Integer user_id) {
+    void delete (@PathVariable("task_id") Integer task_id, @PathVariable ("subject_id") Integer subjectId, @PathVariable("user_id") Integer userId) {
         try {
-            subjectService.getById(subject_id);
+            subjectService.getById(subjectId);
         }catch (RuntimeException e){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no subject with that id "+ subject_id);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no subject with that id "+ subjectId);
         }
         try {
-            userService.getById(user_id);
+            userService.getById(userId);
         }catch (RuntimeException e){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no user with that id "+user_id);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no user with that id "+userId);
         }
         try {
             taskService.delete(task_id);
@@ -184,24 +187,24 @@ public class TaskController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no task with that id "+task_id);
         }
     }
-
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN') or hasAnyRole('ROLE_USER') and authentication.principal.id == #userId")
     @PatchMapping("subjects/{subject_id}/tasks/{task_id}")
     @ResponseStatus(HttpStatus.OK)
-    void changeStatus(@PathVariable("task_id") Integer task_id, @PathVariable Integer subject_id, @PathVariable Integer user_id){
+    void changeStatus(@PathVariable("task_id") Integer taskId, @PathVariable("subject_id") Integer subjectId, @PathVariable("user_id") Integer userId){
     try {
-        subjectService.getById(subject_id);
+        subjectService.getById(subjectId);
     }catch (RuntimeException e){
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no subject with that id "+ subject_id);
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no subject with that id "+ subjectId);
     }
     try {
-        userService.getById(user_id);
+        userService.getById(userId);
     }catch (RuntimeException e){
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no user with that id "+user_id);
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no user with that id "+userId);
     }
     try {
-        taskService.changeState(task_id);
+        taskService.changeState(taskId);
     }catch(RuntimeException e){
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no task with that id "+task_id);
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no task with that id "+taskId);
     }
 }
 }

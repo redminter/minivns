@@ -8,6 +8,7 @@ import lombok.Value;
 @Value
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class SubjectResponse {
+    Integer id;
      String title;
      String vns_url;
      String pract_url;
@@ -21,6 +22,7 @@ public class SubjectResponse {
 //     boolean at_thursday;
 //     boolean at_friday;
     public SubjectResponse(Subject subject) {
+        this.id = subject.getId();
         this.title = subject.getTitle();
         this.vns_url = subject.getVnsUrl();
         this.pract_url = subject.getPraktUrl();

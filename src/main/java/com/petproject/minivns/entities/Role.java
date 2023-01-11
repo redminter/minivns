@@ -5,6 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Locale;
 
 @Data
 @Entity
@@ -19,21 +20,21 @@ public class Role implements GrantedAuthority {
     @Column(name = "id")
     private Integer id;
     @NonNull
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, unique = true)
     private String name;
 //    @OneToMany(mappedBy = "rolesByRoleId")
 //    private List<User> userById;
 
-    public Role(String name){
+    public Role(@NonNull String name){
         this.name = name;
     }
-    public Role(Integer id,String name){
+    public Role(@NonNull Integer id, @NonNull String name){
         this.id = id;
         this.name = name;
     }
 
     @Override
     public String getAuthority() {
-        return name;
+        return "ROLE_"+name;
     }
 }

@@ -35,7 +35,7 @@ public class UserController {
         this.roleService = roleService;
         this.passwordEncoder = passwordEncoder;
     }
-    //@PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated()")
     @GetMapping
     public List<UserResponse> getAll(){
         return userService.getAll().stream().map(UserResponse::new).collect(Collectors.toList());
@@ -70,6 +70,7 @@ public class UserController {
                 .body(new UserResponse(newUser));
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN') or hasAnyRole('ROLE_USER') and authentication.principal.id == #userId")
     @GetMapping("/{user_id}")
     public UserResponse getOne(@PathVariable("user_id") Integer userId) {
         try {
@@ -79,6 +80,7 @@ public class UserController {
         }
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN') or hasAnyRole('ROLE_USER') and authentication.principal.id == #userId")
     @PutMapping({"/{user_id}"})
     @ResponseStatus ( HttpStatus.OK )
     public ResponseEntity<?> update(@PathVariable("user_id") Integer userId, @Valid @RequestBody UserRequest userRequest, BindingResult result) {
@@ -107,11 +109,12 @@ public class UserController {
                 .body(new UserResponse(updatedUser));
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN') or hasAnyRole('ROLE_USER') and authentication.principal.id == #userId")
     @DeleteMapping("/{user_id}")
     @ResponseStatus ( HttpStatus.NO_CONTENT )
-    void delete (@PathVariable("user_id") Integer user_id) {
+    void delete (@PathVariable("user_id") Integer userId) {
        try {
-           userService.delete(user_id);
+           userService.delete(userId);
        }catch(RuntimeException e){
            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no user with that id");
        }

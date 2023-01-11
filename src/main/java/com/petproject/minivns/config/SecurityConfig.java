@@ -22,8 +22,12 @@ import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     // todo: check https://spring.io/blog/2022/02/21/spring-security-without-the-websecurityconfigureradapter
 
-    @Autowired
+    final
     UserDetailsService userServiceImpl;
+
+    public SecurityConfig(UserDetailsService userServiceImpl) {
+        this.userServiceImpl = userServiceImpl;
+    }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -48,7 +52,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // no session
                 )
                 .authorizeHttpRequests(a -> a
-                        .anyRequest().permitAll() // todo
+                        .antMatchers("/subjects/").permitAll()
+                                .anyRequest().permitAll() // todo
                 );
     }
 
