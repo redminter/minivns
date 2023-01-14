@@ -33,6 +33,7 @@ public class TaskController {
         this.subjectService = subjectService;
     }
 
+    //allow access for any admin and for user certain id
     @PreAuthorize("hasAnyRole('ROLE_ADMIN') or hasAnyRole('ROLE_USER') and authentication.principal.id == #userId")
     @GetMapping("/tasks")
     List<TaskResponse> getAllByUser(@PathVariable("user_id") Integer userId) {

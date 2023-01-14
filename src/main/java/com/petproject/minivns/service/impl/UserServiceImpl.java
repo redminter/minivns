@@ -4,16 +4,13 @@ import com.petproject.minivns.entities.User;
 import com.petproject.minivns.repositories.UserRepository;
 import com.petproject.minivns.service.RoleService;
 import com.petproject.minivns.service.UserService;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RoleService roleService;
@@ -43,7 +40,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User update (User user) {
         List<Integer> ids = getAll().stream()
-                .map(User::getId).collect(Collectors.toList());
+                .map(User::getId).toList();
         if (user != null && ids.contains(user.getId())) {
             getById(user.getId()).setFirstName(user.getFirstName());
             getById(user.getId()).setLastName(user.getLastName());
@@ -68,12 +65,16 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+//    @Override
+//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException{
+//        User user = userRepository.findByEmail(username);
+//        if(user==null){
+//          throw new ResponseStatusException(HttpStatus.NO_CONTENT, "User with username "+username+" not found");
+//        }
+//        return user;
+//    }
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException{
-        User user = userRepository.findByEmail(username);
-        if(user==null){
-          throw new ResponseStatusException(HttpStatus.NO_CONTENT, "User with username "+username+" not found");
-        }
-        return user;
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 }
