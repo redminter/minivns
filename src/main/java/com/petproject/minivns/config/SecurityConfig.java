@@ -1,37 +1,39 @@
 package com.petproject.minivns.config;
 
-import lombok.extern.slf4j.Slf4j;
+import com.petproject.minivns.security.jwt.JwtConfigurer;
+import com.petproject.minivns.security.jwt.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
-@Slf4j
+@Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    // todo: check https://spring.io/blog/2022/02/21/spring-security-without-the-websecurityconfigureradapter
 
-    final
-    UserDetailsService userServiceImpl;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    public SecurityConfig(UserDetailsService userServiceImpl) {
-        this.userServiceImpl = userServiceImpl;
+//    private static final String ADMIN_ENDPOINT = "/api/v1/admin/**";
+    private static final String LOGIN_ENDPOINT = "/auth/login";
+
+    @Autowired
+    public SecurityConfig(JwtTokenProvider jwtTokenProvider) {
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
+    @Bean
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userServiceImpl);
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
     }
 
     @Override
@@ -40,35 +42,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling(eh -> eh
                         .authenticationEntryPoint(restAuthenticationEntryPoint())
                 )
-                .httpBasic(hb -> hb
-                        .authenticationEntryPoint(restAuthenticationEntryPoint()) // Handles auth error
-                )
+                .httpBasic().disable()
                 .csrf().disable()
-                .headers(h -> h
-                        .frameOptions() // for Postman, the H2 console
-                        .disable()
-                )
-                .sessionManagement(sm -> sm
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // no session
-                )
-                .authorizeHttpRequests(a -> a
-                        .antMatchers("/subjects/").permitAll()
-                                .anyRequest().permitAll() // todo
-                );
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .authorizeRequests()
+                .antMatchers(LOGIN_ENDPOINT).permitAll()
+                .antMatchers("/subjects/**").permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .apply(new JwtConfigurer(jwtTokenProvider));
     }
-
-    @Bean
-    public static PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
     @Bean
     AuthenticationEntryPoint restAuthenticationEntryPoint() {
-        return (request, response, authException) -> {
-            log.warn("Authentication for '{} {}' failed with error: {}",
-                    request.getMethod(), request.getRequestURL(), authException.getMessage());
-            response.sendError(
-                    UNAUTHORIZED.value(), authException.getMessage());
-        };
+        return (request, response, authException) -> response.sendError(
+                UNAUTHORIZED.value(), authException.getMessage());
     }
 }
