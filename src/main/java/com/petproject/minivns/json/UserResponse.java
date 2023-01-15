@@ -2,7 +2,6 @@ package com.petproject.minivns.json;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import com.petproject.minivns.entities.Role;
 import com.petproject.minivns.entities.User;
 import lombok.Value;
 
@@ -14,7 +13,7 @@ public class UserResponse {
      String first_name;
      String last_name;
      String email;
-     Role role_Id;
+//     Role role_Id;
 
 
     public UserResponse(User user) {
@@ -22,6 +21,6 @@ public class UserResponse {
         this.first_name= user.getFirstName();
         this.last_name= user.getLastName();
         this.email= user.getEmail();
-        this.role_Id=user.getRole_Id();
+//        this.role_Id=user.getRole_Id();
     }
 }

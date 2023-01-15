@@ -22,4 +22,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         return new ResponseEntity<>(new ExceptionResponse(exception.getMessage(), HttpStatus.NOT_FOUND, status.value(), LocalDateTime.now()), HttpStatus.NOT_FOUND);
     }
+
+//    @ExceptionHandler(AuthenticationException.class)
+//    ResponseEntity<Object> handleAuthenticationException(BadCredentialsException exception, HttpStatus status){
+//        return new ResponseEntity<>(new ExceptionResponse(exception.getMessage(), HttpStatus.NOT_FOUND, status.value(), LocalDateTime.now()), HttpStatus.NOT_FOUND);
+//    }
 }

@@ -75,11 +75,12 @@ public class TaskController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> create(@PathVariable("user_id") Integer userId, @PathVariable("subject_id") Integer subjectId, @Validated @RequestBody TaskRequest taskRequest, BindingResult result) {
         userService.getById(userId);
-        List<Subject> subjects = taskService.getAllByUser_id(userId).stream()
-                .map(Task::getSubjectBySubjectId).toList();
-        if (!subjects.contains(subjectService.getById(subjectId))) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No tasks for user with id:" + userId + " in subject with id:" + subjectId);
-        } else if (result.hasErrors()) {
+//        List<Subject> subjects = taskService.getAllByUser_id(userId).stream()
+//                .map(Task::getSubjectBySubjectId).toList();
+//        if (!subjects.contains(subjectService.getById(subjectId))) {
+//            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No tasks for user with id:" + userId + " in subject with id:" + subjectId);
+//        } else
+        if (result.hasErrors()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Some data is bad entered");
         }
         Task newTask = new Task();

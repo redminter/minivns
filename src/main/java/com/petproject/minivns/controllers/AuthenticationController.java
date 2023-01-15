@@ -5,9 +5,9 @@ import com.petproject.minivns.json.AuthenticationRequest;
 import com.petproject.minivns.security.jwt.JwtTokenProvider;
 import com.petproject.minivns.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,15 +38,19 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody AuthenticationRequest requestDto) {
-        try {
+    public ResponseEntity<?> login(@RequestBody AuthenticationRequest requestDto) throws ResponseStatusException {
             String email = requestDto.getUsername();
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, requestDto.getPassword()));
+
             User user = userService.findByEmail(email);
 
             if (user == null) {
                 throw new UsernameNotFoundException("User with username: " + email + " not found");
             }
+           try{
+               authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, requestDto.getPassword()));
+           }catch (AuthenticationException e){
+               throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"Invalid username or password");
+           }
 
             String token = jwtTokenProvider.createToken(email, user.getRole_Id());
 
@@ -54,8 +59,6 @@ public class AuthenticationController {
             response.put("token", token);
 
             return ResponseEntity.ok(response);
-        } catch (AuthenticationException e) {
-            throw new BadCredentialsException("Invalid username or password");
-        }
+
     }
 }

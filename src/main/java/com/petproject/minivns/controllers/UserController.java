@@ -35,7 +35,7 @@ public class UserController {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @GetMapping
     public List<UserResponse> getAll() {
         List<UserResponse> list = userService.getAll().stream().map(UserResponse::new).collect(Collectors.toList());
