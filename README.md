@@ -18,7 +18,7 @@ For running it you will need java 17 and postgreSql
 	>Name for database `minivns`.
 	>
 	>But if you want to use your own credentials and your own name for database you need to change properties in `resources/application.properties` for this
-        >
+>        
 >```sh
 >spring.datasource.url=jdbc:postgresql://localhost:5432/minivns{<-database name}
 >spring.datasource.username=postgres{<-username}
