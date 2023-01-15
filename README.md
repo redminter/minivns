@@ -9,15 +9,15 @@ For running it you will need java 17 and postgreSql
 
 2. After that you need to create database*. You can use PgAdmin or SQLShell
 
-	*It is better to use as a credentials for  postgres user next values 
+	>*It is better to use as a credentials for  postgres user next values 
 	
-	username: `postgres`,
+	>username: `postgres`,
 
-	password `1111`,
+	>password `1111`,
 
-	Name for database `minivns`.
+	>Name for database `minivns`.
 	
-	But if you want to use your own credentials and your own name for database you need to change properties in `resources/application.properties` for this
+	>But if you want to use your own credentials and your own name for database you need to change properties in `resources/application.properties` for this
 
 ```sh
 spring.datasource.url=jdbc:postgresql://localhost:5432/minivns{<-database name}
