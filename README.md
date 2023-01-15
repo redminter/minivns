@@ -25,7 +25,6 @@ For running it you will need java 17 and postgreSql
 >spring.datasource.password=1111{<-password}
 >```
 3. After that you need to install database scheme into your database, using file `resources/library.backup`. You can use SQLShell or PgAdmin.
-
 	3.1. VIA  PgAdmin you can need firstly to provide path to bin folder with all of utilities.
 	To do that go to
 	
