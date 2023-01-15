@@ -28,43 +28,63 @@ public class SubjectController {
     public SubjectController(SubjectService subjectService) {
         this.subjectService = subjectService;
     }
+
     @GetMapping
-    public List<SubjectResponse> getAll(){
-        return subjectService.getAll().stream().map(SubjectResponse::new).collect(Collectors.toList());
+    public List<SubjectResponse> getAll() {
+        List<SubjectResponse> list = subjectService.getAll().stream().map(SubjectResponse::new).collect(Collectors.toList());
+        if (list.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "No Subject is available");
+        } else {
+            return list;
+        }
     }
+
     @GetMapping("/schedule")
-    public List<SubjectResponse> getSchedule(){
-        return subjectService.getSchedule(LocalDateTime.now()).stream().map(SubjectResponse::new).collect(Collectors.toList());
+    public List<SubjectResponse> getSchedule() {
+        List<SubjectResponse> list = subjectService.getSchedule(LocalDateTime.now()).stream().map(SubjectResponse::new).collect(Collectors.toList());
+        if(list.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "No Subject is available");
+        }
+        else{
+            return list;
+        }
     }
+
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> create(@Validated @RequestBody SubjectRequest subjectRequest, BindingResult result){
-        if(result.hasErrors()){ throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Some data(maybe title) is bad entered");}
-            Subject newSubject = new Subject();
-            newSubject.setTitle(subjectRequest.getTitle());
-            if(!(subjectRequest.getVns_url()==null)){
-            newSubject.setVnsUrl(subjectRequest.getVns_url());}
-            else{
-                newSubject.setVnsUrl("");}
-            if(!(subjectRequest.getPract_url()==null)){
-            newSubject.setPraktUrl(subjectRequest.getPract_url());}
-            else{
-                newSubject.setPraktUrl("");}
-            if(!(subjectRequest.getLection_url()==null)){
-            newSubject.setLectionUrl(subjectRequest.getLection_url());}
-            else{
-                newSubject.setLectionUrl("");}
-            if(!(subjectRequest.getLab_url()==null)){
-            newSubject.setLabUrl(subjectRequest.getLab_url());}
-            else{
-                newSubject.setLabUrl("");}
-            newSubject.setAtMonday(subjectRequest.isAtMonday());
-            newSubject.setAtTuesday(subjectRequest.isAtTuesday());
-            newSubject.setAtWednesday(subjectRequest.isAtWednesday());
-            newSubject.setAtThursday(subjectRequest.isAtThursday());
-            newSubject.setAtFriday(subjectRequest.isAtFriday());
-            subjectService.create(newSubject);
+    public ResponseEntity<?> create(@Validated @RequestBody SubjectRequest subjectRequest, BindingResult result) {
+        if (result.hasErrors()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Some data(maybe title) is bad entered");
+        }
+        Subject newSubject = new Subject();
+        newSubject.setTitle(subjectRequest.getTitle());
+        if (!(subjectRequest.getVns_url() == null)) {
+            newSubject.setVnsUrl(subjectRequest.getVns_url());
+        } else {
+            newSubject.setVnsUrl("");
+        }
+        if (!(subjectRequest.getPract_url() == null)) {
+            newSubject.setPraktUrl(subjectRequest.getPract_url());
+        } else {
+            newSubject.setPraktUrl("");
+        }
+        if (!(subjectRequest.getLection_url() == null)) {
+            newSubject.setLectionUrl(subjectRequest.getLection_url());
+        } else {
+            newSubject.setLectionUrl("");
+        }
+        if (!(subjectRequest.getLab_url() == null)) {
+            newSubject.setLabUrl(subjectRequest.getLab_url());
+        } else {
+            newSubject.setLabUrl("");
+        }
+        newSubject.setAtMonday(subjectRequest.isAtMonday());
+        newSubject.setAtTuesday(subjectRequest.isAtTuesday());
+        newSubject.setAtWednesday(subjectRequest.isAtWednesday());
+        newSubject.setAtThursday(subjectRequest.isAtThursday());
+        newSubject.setAtFriday(subjectRequest.isAtFriday());
+        subjectService.create(newSubject);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -77,34 +97,31 @@ public class SubjectController {
 
     @GetMapping("/{subject_id}")
     public SubjectResponse getOne(@PathVariable("subject_id") Integer subjectId) {
-     try{
-        return new SubjectResponse(subjectService.getById(subjectId));
-    }catch (RuntimeException e){
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no subject with that id");
+            return new SubjectResponse(subjectService.getById(subjectId));
     }
-    }
+
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @PutMapping({"/{subject_id}"})
-    @ResponseStatus ( HttpStatus.OK )
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> update(@PathVariable("subject_id") Integer subjectId, @Valid @RequestBody SubjectRequest subjectRequest, BindingResult result) {
-        try {
             subjectService.getById(subjectId);
-        }catch (RuntimeException e){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no subject with that id");
-        }
-        if(result.hasErrors()){
+        if (result.hasErrors()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Some data(maybe title) is bad entered");
         }
         Subject updatedSubject = subjectService.getById(subjectId);
         updatedSubject.setTitle(subjectRequest.getTitle());
-        if(!(subjectRequest.getVns_url()==null)){
-            updatedSubject.setVnsUrl(subjectRequest.getVns_url());}
-        if(!(subjectRequest.getPract_url()==null)){
-            updatedSubject.setPraktUrl(subjectRequest.getPract_url());}
-        if(!(subjectRequest.getLection_url()==null)){
-            updatedSubject.setLectionUrl(subjectRequest.getLection_url());}
-        if(!(subjectRequest.getLab_url()==null)){
-            updatedSubject.setLabUrl(subjectRequest.getLab_url());}
+        if (!(subjectRequest.getVns_url() == null)) {
+            updatedSubject.setVnsUrl(subjectRequest.getVns_url());
+        }
+        if (!(subjectRequest.getPract_url() == null)) {
+            updatedSubject.setPraktUrl(subjectRequest.getPract_url());
+        }
+        if (!(subjectRequest.getLection_url() == null)) {
+            updatedSubject.setLectionUrl(subjectRequest.getLection_url());
+        }
+        if (!(subjectRequest.getLab_url() == null)) {
+            updatedSubject.setLabUrl(subjectRequest.getLab_url());
+        }
         updatedSubject.setAtMonday(subjectRequest.isAtMonday());
         updatedSubject.setAtTuesday(subjectRequest.isAtTuesday());
         updatedSubject.setAtWednesday(subjectRequest.isAtWednesday());
@@ -120,14 +137,11 @@ public class SubjectController {
                 .created(location)
                 .body(new SubjectResponse(updatedSubject));
     }
+
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @DeleteMapping("/{subject_id}")
-    @ResponseStatus ( HttpStatus.NO_CONTENT )
-    void delete (@PathVariable("subject_id") Integer subject_id) {
-        try{
-        subjectService.delete(subject_id);
-    }catch(RuntimeException e){
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no subject with that id");
-    }
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    void delete(@PathVariable("subject_id") Integer subject_id) {
+            subjectService.delete(subject_id);
     }
 }

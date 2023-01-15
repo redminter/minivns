@@ -2,7 +2,6 @@ package com.petproject.minivns.json;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.petproject.minivns.entities.Role;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;

@@ -3,7 +3,6 @@ package com.petproject.minivns.controllers;
 import com.petproject.minivns.entities.User;
 import com.petproject.minivns.json.UserRequest;
 import com.petproject.minivns.json.UserResponse;
-
 import com.petproject.minivns.service.RoleService;
 import com.petproject.minivns.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -26,7 +25,7 @@ import java.util.stream.Collectors;
 public class UserController {
     final UserService userService;
     final RoleService roleService;
-    
+
     final PasswordEncoder passwordEncoder;
 
 
@@ -35,28 +34,32 @@ public class UserController {
         this.roleService = roleService;
         this.passwordEncoder = passwordEncoder;
     }
+
     @PreAuthorize("isAuthenticated()")
     @GetMapping
-    public List<UserResponse> getAll(){
-        return userService.getAll().stream().map(UserResponse::new).collect(Collectors.toList());
+    public List<UserResponse> getAll() {
+        List<UserResponse> list = userService.getAll().stream().map(UserResponse::new).collect(Collectors.toList());
+        if (list.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "There is no users");
+        } else {
+            return list;
+        }
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> create(@Validated @RequestBody UserRequest userRequest, BindingResult result){
-        if(result.hasErrors()){
+    public ResponseEntity<?> create(@Validated @RequestBody UserRequest userRequest, BindingResult result) {
+        if (result.hasErrors()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Some data is bad entered");
         }
         User newUser = new User();
-
         newUser.setFirstName(userRequest.getFirst_name());
         newUser.setLastName(userRequest.getLast_name());
         newUser.setEmail(userRequest.getEmail());
         newUser.setPassword(passwordEncoder.encode(userRequest.getPassword()));
-        if(!(userRequest.getRole_Id()==null)) {
+        if (!(userRequest.getRole_Id() == null)) {
             newUser.setRole_Id(roleService.getById(userRequest.getRole_Id()));
-        }
-        else{
+        } else {
             newUser.setRole_Id(roleService.getById(2));
         }
         userService.create(newUser);
@@ -73,31 +76,25 @@ public class UserController {
     @PreAuthorize("hasAnyRole('ROLE_ADMIN') or hasAnyRole('ROLE_USER') and authentication.principal.id == #userId")
     @GetMapping("/{user_id}")
     public UserResponse getOne(@PathVariable("user_id") Integer userId) {
-        try {
-            return new UserResponse(userService.getById(userId));
-        }catch (RuntimeException e){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no user with that id");
-        }
+        return new UserResponse(userService.getById(userId));
     }
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN') or hasAnyRole('ROLE_USER') and authentication.principal.id == #userId")
     @PutMapping({"/{user_id}"})
-    @ResponseStatus ( HttpStatus.OK )
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> update(@PathVariable("user_id") Integer userId, @Valid @RequestBody UserRequest userRequest, BindingResult result) {
-        try {
-                userService.getById(userId);
-            }catch (RuntimeException e){
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no user with that id");
-        }
-        if(result.hasErrors()){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Some data is bad entered");
+        if (result.hasErrors()) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Some data is bad entered");
         }
         User updatedUser = userService.getById(userId);
         updatedUser.setFirstName(userRequest.getFirst_name());
         updatedUser.setLastName(userRequest.getLast_name());
         updatedUser.setEmail(userRequest.getEmail());
         updatedUser.setPassword(passwordEncoder.encode(userRequest.getPassword()));
-        updatedUser.setRole_Id(roleService.getById(userRequest.getRole_Id()));
+        if(userRequest.getRole_Id() != null){
+            updatedUser.setRole_Id(roleService.getById(userRequest.getRole_Id()));
+        }
+
         userService.update(updatedUser);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -111,12 +108,8 @@ public class UserController {
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN') or hasAnyRole('ROLE_USER') and authentication.principal.id == #userId")
     @DeleteMapping("/{user_id}")
-    @ResponseStatus ( HttpStatus.NO_CONTENT )
-    void delete (@PathVariable("user_id") Integer userId) {
-       try {
-           userService.delete(userId);
-       }catch(RuntimeException e){
-           throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no user with that id");
-       }
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    void delete(@PathVariable("user_id") Integer userId) {
+            userService.delete(userId);
     }
 }

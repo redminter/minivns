@@ -3,15 +3,8 @@ package com.petproject.minivns.json;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.petproject.minivns.entities.Role;
-import com.petproject.minivns.entities.Subject;
 import com.petproject.minivns.entities.User;
-import lombok.NonNull;
 import lombok.Value;
-import org.springframework.security.crypto.password.PasswordEncoder;
-
-import javax.persistence.Column;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 
 @Value
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)

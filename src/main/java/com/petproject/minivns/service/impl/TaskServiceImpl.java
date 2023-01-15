@@ -1,18 +1,26 @@
 package com.petproject.minivns.service.impl;
 
 import com.petproject.minivns.entities.Task;
+import com.petproject.minivns.entities.User;
 import com.petproject.minivns.repositories.TaskRepository;
 import com.petproject.minivns.service.TaskService;
+import com.petproject.minivns.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
 @Service
 public class TaskServiceImpl implements TaskService {
     private final TaskRepository taskRepository;
+    private final UserService userService;
 
-    public TaskServiceImpl(TaskRepository taskRepository) {
+    @Autowired
+    public TaskServiceImpl(TaskRepository taskRepository, UserService userService) {
         this.taskRepository = taskRepository;
+        this.userService = userService;
     }
 
     @Override
@@ -28,7 +36,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public Task getById(Integer id) {
         return taskRepository.findById(id).orElseThrow(
-                () -> new RuntimeException("Task id not found")
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task with id " + id+ " is not found")
         );
     }
 
@@ -36,7 +44,13 @@ public class TaskServiceImpl implements TaskService {
     public Task update(Task task) {
         List<Integer> ids = getAll().stream()
                 .map(Task::getId).toList();
-        if (task != null && ids.contains(task.getId())) {
+        if(task == null){
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Some information was typed wrong and task cannot be updated");
+        }
+        else if (!ids.contains(task.getId())){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task with id:"+ task.getId()+" is not found and cannot be updated");
+        }
+        else{
             getById(task.getId()).setLink(task.getLink());
             getById(task.getId()).setDeadline(task.getDeadline());
             getById(task.getId()).setTitle(task.getTitle());
@@ -45,21 +59,27 @@ public class TaskServiceImpl implements TaskService {
             task.setSubjectBySubjectId(getById(task.getId()).getSubjectBySubjectId());
             return taskRepository.save(task);
         }
-        throw new RuntimeException("Task is null or not found and cannot be updated");
     }
     @Override
     public void delete(Integer id) {
         Task task = getById(id);
-        if(task != null && getAll().contains(task)) {
-            taskRepository.delete(task);
+        if(task == null){
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "There is no task to delete");
+        }
+        else if (!getAll().contains(task)){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task is not found and cannot be deleted");
         }
         else{
-            throw new RuntimeException("Task is null or not found and cannot be deleted");
+            taskRepository.delete(task);
         }
     }
 
     @Override
     public List<Task> getAllByUser_id(Integer id) {
+        User user = userService.getById(id);
+        if(user == null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no user found with id " + id);
+        }
         return taskRepository.getTasksByUser_id(id);
     }
     @Override
@@ -69,18 +89,21 @@ public class TaskServiceImpl implements TaskService {
             return list;
         }
         else{
-            throw new RuntimeException();
+            throw new  ResponseStatusException(HttpStatus.NO_CONTENT, "There is no tasks for this subjects");
         }
     }
     @Override
     public void changeState(Integer id){
         Task task = getById(id);
-        if(task != null && getAll().contains(task)) {
+        if(task == null){
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "There is no task to change");
+        }
+        else if (!getAll().contains(task)){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task is not found and cannot be changed");
+        }
+        else {
             task.setIsDone(!(task.getIsDone()));
             taskRepository.save(task);
-        }
-        else{
-            throw new RuntimeException("There is no task with id " + id);
         }
     }
 }

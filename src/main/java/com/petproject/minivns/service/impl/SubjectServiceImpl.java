@@ -3,12 +3,13 @@ package com.petproject.minivns.service.impl;
 import com.petproject.minivns.entities.Subject;
 import com.petproject.minivns.repositories.SubjectRepository;
 import com.petproject.minivns.service.SubjectService;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.time.DayOfWeek;
+
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class SubjectServiceImpl implements SubjectService {
@@ -31,7 +32,7 @@ public class SubjectServiceImpl implements SubjectService {
     @Override
     public Subject getById(Integer id) {
         return subjectRepository.findById(id).orElseThrow(
-                () -> new RuntimeException("Subject id not found")
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Subject with id " +id+ " is not found")
         );
     }
 
@@ -51,7 +52,13 @@ public class SubjectServiceImpl implements SubjectService {
     public Subject update(Subject subject) {
         List<Integer> ids = getAll().stream()
                 .map(Subject::getId).toList();
-        if (subject != null && ids.contains(subject.getId())) {
+        if(subject == null){
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Some information was typed wrong and subject cannot be updated");
+        }
+        else if (!ids.contains(subject.getId())){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Subject with id:"+ subject.getId()+ " not found and cannot be updated");
+        }
+        else {
             getById(subject.getId()).setTitle(subject.getTitle());
             getById(subject.getId()).setLabUrl(subject.getLabUrl());
             getById(subject.getId()).setLectionUrl(subject.getLectionUrl());
@@ -60,16 +67,18 @@ public class SubjectServiceImpl implements SubjectService {
 
             return subjectRepository.save(subject);
         }
-        throw new RuntimeException("Subject is null or not found and cannot be updated");
     }
     @Override
     public void delete(Integer id) {
         Subject subject = getById(id);
-        if(subject != null && getAll().contains(subject)) {
-            subjectRepository.delete(subject);
+        if(subject == null){
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "There is no subject to delete");
         }
-        else{
-            throw new RuntimeException("Subject is null or not found and cannot be deleted");
+        else if (!getAll().contains(subject)){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Subject is not found and cannot be deleted");
+        }
+       else{
+            subjectRepository.delete(subject);
         }
     }
 }

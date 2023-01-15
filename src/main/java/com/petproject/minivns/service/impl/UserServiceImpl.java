@@ -5,7 +5,9 @@ import com.petproject.minivns.repositories.UserRepository;
 import com.petproject.minivns.service.RoleService;
 import com.petproject.minivns.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -15,57 +17,77 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RoleService roleService;
 
-    public UserServiceImpl(UserRepository userRepository, RoleService roleService)
-    {
+    public UserServiceImpl(UserRepository userRepository, RoleService roleService) {
         this.userRepository = userRepository;
         this.roleService = roleService;
     }
 
     @Override
     public User create(User user) {
-        return userRepository.save(user);
+        List<String> emails = getAll().stream()
+                .map(User::getEmail).toList();
+        if(emails.contains(user.getEmail())){
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "There is such email registered already");
+        }
+        else{
+            return userRepository.save(user);
+        }
+
     }
 
     @Override
     public List<User> getAll() {
         return userRepository.findAll();
     }
+
     @Override
     public User getById(Integer id) {
         return userRepository.findById(id).orElseThrow(
-                () -> new RuntimeException("User id not found")
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User with id: " + id + " not found")
         );
     }
 
     @Override
-    public User update (User user) {
-        List<Integer> ids = getAll().stream()
-                .map(User::getId).toList();
-        if (user != null && ids.contains(user.getId())) {
+    public User update(User user) {
+        List<User> userList = getAll();
+        userList.remove(user);
+        List<String> emails = userList.stream()
+                .map(User::getEmail).toList();
+
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Some information was typed wrong and user cannot be updated");
+        } else if (!getAll().stream().map(User::getId).toList().contains(user.getId())) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User with id:" + user.getId() + " is not found and cannot be updated");
+        } else {
             getById(user.getId()).setFirstName(user.getFirstName());
             getById(user.getId()).setLastName(user.getLastName());
             getById(user.getId()).setPassword(user.getPassword());
-            getById(user.getId()).setEmail(user.getEmail());
-            if(user.getRole_Id()==null){
+            if(emails.contains(user.getEmail()))
+            {
+                throw  new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "User with such email address already exists");
+            }
+            else {
+                getById(user.getId()).setEmail(user.getEmail());
+            }
+            if (user.getRole_Id() == null) {
                 getById(user.getId()).setRole_Id(roleService.getById(2));
                 user.setRole_Id(roleService.getById(2));
             }
             return userRepository.save(user);
         }
-        throw new RuntimeException("User is null or not found and cannot be updated");
     }
+
     @Override
     public void delete(Integer id) {
         User user = getById(id);
-        if(user != null && getAll().contains(user)) {
+        if (!getAll().contains(user)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User is not found and cannot be deleted");
+        } else {
             userRepository.delete(user);
-        }
-        else{
-            throw new RuntimeException("User is null or not found and cannot be deleted");
         }
     }
 
-//    @Override
+    //    @Override
 //    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException{
 //        User user = userRepository.findByEmail(username);
 //        if(user==null){
@@ -75,6 +97,11 @@ public class UserServiceImpl implements UserService {
 //    }
     @Override
     public User findByEmail(String email) {
-        return userRepository.findByEmail(email);
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User with email:" + email + " is not found");
+        } else {
+            return user;
+        }
     }
 }

@@ -1,7 +1,6 @@
 package com.petproject.minivns.service;
 
 import com.petproject.minivns.entities.Subject;
-import com.petproject.minivns.entities.User;
 
 import java.time.LocalDateTime;
 import java.util.List;

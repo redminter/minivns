@@ -1,7 +1,6 @@
 package com.petproject.minivns.service;
 
 import com.petproject.minivns.entities.Task;
-import com.petproject.minivns.entities.User;
 
 import java.util.List;
 
