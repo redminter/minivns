@@ -37,9 +37,11 @@ For running it you will need java 17 and postgreSql
 #spring.jpa.hibernate.ddl-auto=update
 #spring.sql.init.mode=always 
 ```
-   and comment previous statement
-	5.1. Also you may need  to create sequences. you can use  idea's tool to create sequence and can write in `data.sql`:	
-```sh
+   and comment previous statement.
+   
+   5.1. Also you may need  to create sequences. you can use  idea's tool to create sequence and can write in `data.sql`:	
+
+```
 CREATE SEQUENCE tasks_start8{<- for example} START WITH 8{<-for example} INCREMENT BY 1{<- for example} START 8 RESTART 8;
 ```
 6.After that check if `role->users->subjects->tasks` were created and filled with records from `resources/data.sql`.
