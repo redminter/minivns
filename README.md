@@ -25,6 +25,7 @@ For running it you will need java 17 and postgreSql
 >spring.datasource.password=1111{<-password}
 >```
 3. After that you need to install database scheme into your database, using file `resources/library.backup`. You can use SQLShell or PgAdmin.
+	
 	3.1. VIA  PgAdmin you can need firstly to provide path to bin folder with all of utilities.
 	To do that go to
 	
@@ -37,7 +38,6 @@ For running it you will need java 17 and postgreSql
 #spring.sql.init.mode=always 
 ```
    and comment previous statement
-
 	5.1. Also you may need  to create sequences. you can use  idea's tool to create sequence and can write in `data.sql`:	
 ```sh
 CREATE SEQUENCE tasks_start8{<- for example} START WITH 8{<-for example} INCREMENT BY 1{<- for example} START 8 RESTART 8;
