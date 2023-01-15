@@ -28,7 +28,8 @@ spring.datasource.password=1111{<-password}
 
 3.1. VIA  PgAdmin you can need firstly to provide path to bin folder with all of utilities.
 	To do that go to
-``` File->Preferences->Binary paths->PostgreSQL Binary paths section, your version of PostgreSql->Click on folder icon and choose path to postgresql bin folder.```
+	
+```File->Preferences->Binary paths->PostgreSQL Binary paths section, your version of PostgreSql->Click on folder icon and choose path to postgresql bin folder.```
 
 4. After that you can run program and a server.
 5. To firstly run or rerun a database you need to uncomment in `resources/application.properties`
