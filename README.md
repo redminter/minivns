@@ -19,11 +19,11 @@ For running it you will need java 17 and postgreSql
 	>
 	>But if you want to use your own credentials and your own name for database you need to change properties in `resources/application.properties` for this
         >
-        >```sh
-        >spring.datasource.url=jdbc:postgresql://localhost:5432/minivns{<-database name}
-        >spring.datasource.username=postgres{<-username}
-        >spring.datasource.password=1111{<-password}
-        >```
+>```sh
+>spring.datasource.url=jdbc:postgresql://localhost:5432/minivns{<-database name}
+>spring.datasource.username=postgres{<-username}
+>spring.datasource.password=1111{<-password}
+>```
 3. After that you need to install database scheme into your database, using file `resources/library.backup`. You can use SQLShell or PgAdmin.
 
 3.1. VIA  PgAdmin you can need firstly to provide path to bin folder with all of utilities.
