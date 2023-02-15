@@ -15,6 +15,12 @@ public class TaskRequest {
     String link;
 
     LocalDateTime deadline;
+    @JsonProperty("done_date")
+    LocalDateTime doneDate;
+
+    Integer mark;
+    @JsonProperty("max_mark")
+    Integer maxMark;
 
     @JsonProperty("is_done")
     Boolean isDone;

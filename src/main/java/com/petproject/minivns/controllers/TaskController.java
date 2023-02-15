@@ -34,7 +34,6 @@ public class TaskController {
         this.userService = userService;
         this.subjectService = subjectService;
     }
-
     //allow access for any admin and for user certain id
     @PreAuthorize("hasAnyRole('ROLE_ADMIN') or hasAnyRole('ROLE_USER') and authentication.principal.id == #userId")
     @GetMapping("/tasks")
@@ -49,7 +48,6 @@ public class TaskController {
             return list;
         }
     }
-
     @PreAuthorize("hasAnyRole('ROLE_ADMIN') or hasAnyRole('ROLE_USER') and authentication.principal.id == #userId")
     @GetMapping("subjects/{subject_id}/tasks")
     List<TaskResponse> getAllBySubject(@PathVariable("user_id") Integer userId, @PathVariable("subject_id") Integer subjectId) {
@@ -57,7 +55,7 @@ public class TaskController {
         List<Subject> subjects = taskService.getAllByUser_id(userId).stream()
                 .map(Task::getSubjectBySubjectId).toList();
         if (!subjects.contains(subjectService.getById(subjectId))) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No tasks for user with id:" + userId + " in subject with id:" + subjectId);
+            return null;
         } else {
             List<TaskResponse> list = taskService.getAllBySubject_id(userId, subjectId).stream()
                     .map(TaskResponse::new)
@@ -69,7 +67,6 @@ public class TaskController {
             }
         }
     }
-
     @PreAuthorize("hasAnyRole('ROLE_ADMIN') or hasAnyRole('ROLE_USER') and authentication.principal.id == #userId")
     @PostMapping("subjects/{subject_id}/tasks")
     @ResponseStatus(HttpStatus.CREATED)
@@ -109,7 +106,6 @@ public class TaskController {
                 .created(location)
                 .body(new TaskResponse(newTask));
     }
-
     @PreAuthorize("hasAnyRole('ROLE_ADMIN') or hasAnyRole('ROLE_USER') and authentication.principal.id == #userId")
     @GetMapping("subjects/{subject_id}/tasks/{task_id}")
     public TaskResponse getOne(@PathVariable("user_id") Integer userId, @PathVariable("subject_id") Integer subjectId, @PathVariable("task_id") Integer taskId) {
@@ -126,7 +122,6 @@ public class TaskController {
             }
         }
     }
-
     @PreAuthorize("hasAnyRole('ROLE_ADMIN') or hasAnyRole('ROLE_USER') and authentication.principal.id == #userId")
     @PutMapping({"subjects/{subject_id}/tasks/{task_id}"})
     @ResponseStatus(HttpStatus.OK)
@@ -147,10 +142,19 @@ public class TaskController {
         } else {
             updatedTask.setLink("");
         }
+        if (!(taskRequest.getMark() == null)) {
+            updatedTask.setMark(taskRequest.getMark());
+        }
+        if (!(taskRequest.getMark() == null)) {
+            updatedTask.setMaxMark(taskRequest.getMaxMark());
+        }
         if (!(taskRequest.getDeadline() == null)) {
             updatedTask.setDeadline(taskRequest.getDeadline());
         } else {
             updatedTask.setDeadline(LocalDateTime.of(1, 1, 1, 1, 1));
+        }
+        if (!(taskRequest.getDoneDate() == null)) {
+            updatedTask.setDoneDate(taskRequest.getDoneDate());
         }
         updatedTask.setIsDone(taskRequest.getIsDone());
         updatedTask.setUser(userService.getById(userId));
@@ -165,7 +169,6 @@ public class TaskController {
                 .created(location)
                 .body(new TaskResponse(updatedTask));
     }
-
     @PreAuthorize("hasAnyRole('ROLE_ADMIN') or hasAnyRole('ROLE_USER') and authentication.principal.id == #userId")
     @DeleteMapping("subjects/{subject_id}/tasks/{task_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -179,22 +182,6 @@ public class TaskController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You can`t reach this task");
         } else {
             taskService.delete(taskId);
-        }
-    }
-
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN') or hasAnyRole('ROLE_USER') and authentication.principal.id == #userId")
-    @PatchMapping("subjects/{subject_id}/tasks/{task_id}")
-    @ResponseStatus(HttpStatus.OK)
-    void changeStatus(@PathVariable("task_id") Integer taskId, @PathVariable("subject_id") Integer subjectId, @PathVariable("user_id") Integer userId) {
-        userService.getById(userId);
-        List<Subject> subjects = taskService.getAllByUser_id(userId).stream()
-                .map(Task::getSubjectBySubjectId).toList();
-        if (!subjects.contains(subjectService.getById(subjectId))) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No tasks for user with id:" + userId + " in subject with id:" + subjectId);
-        } else if (!(taskService.getById(taskId).getUser().getId().equals(userId)) && !userService.getById(userId).getRole_Id().getAuthority().equals("ROLE_ADMIN")) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You can`t reach this task");
-        } else {
-            taskService.changeState(taskId);
         }
     }
 }

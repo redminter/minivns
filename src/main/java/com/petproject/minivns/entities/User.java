@@ -31,7 +31,6 @@ public class User {
     @NonNull
     @Column(name = "email", nullable = false, unique = true)
     private String email;
-
     @NonNull
     @Column(name = "password")
     private String password;

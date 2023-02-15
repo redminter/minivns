@@ -23,6 +23,9 @@ public class Subject {
     @Column(name = "title")
     private String title;
 
+    @Column(name = "credit")
+    private Integer credit;
+
     @Column(name = "vns_url")
     private String vnsUrl;
 
@@ -66,12 +69,13 @@ public class Subject {
         this.labUrl = labUrl;
     }
 
-    public Subject(@NonNull String title, String vnsUrl, String lectionUrl, String praktUrl, String labUrl, boolean atMonday, boolean atTuesday, boolean atWednesday, boolean atThursday, boolean atFriday) {
+    public Subject(@NonNull String title, String vnsUrl, String lectionUrl, String praktUrl, String labUrl, Integer credit, boolean atMonday, boolean atTuesday, boolean atWednesday, boolean atThursday, boolean atFriday) {
         this.title = title;
         this.vnsUrl = vnsUrl;
         this.lectionUrl = lectionUrl;
         this.praktUrl = praktUrl;
         this.labUrl = labUrl;
+        this.credit=credit;
         this.atMonday = atMonday;
         this.atTuesday = atTuesday;
         this.atWednesday = atWednesday;

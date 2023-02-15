@@ -9,18 +9,19 @@ import lombok.Value;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class SubjectResponse {
     Integer id;
-     String title;
-     String vns_url;
-     String pract_url;
+    String title;
+    String vns_url;
+    String pract_url;
+    Integer credit;
+    String lab_url;
+    String lection_url;
 
-     String lab_url;
-     String lection_url;
+    boolean at_monday;
+    boolean at_tuesday;
+    boolean at_wednesday;
+    boolean at_thursday;
+    boolean at_friday;
 
-//     boolean at_monday;
-//     boolean at_tuesday;
-//     boolean at_wednesday;
-//     boolean at_thursday;
-//     boolean at_friday;
     public SubjectResponse(Subject subject) {
         this.id = subject.getId();
         this.title = subject.getTitle();
@@ -28,10 +29,11 @@ public class SubjectResponse {
         this.pract_url = subject.getPraktUrl();
         this.lab_url = subject.getLabUrl();
         this.lection_url = subject.getLectionUrl();
-//        at_monday = subject.isAtMonday();
-//        at_tuesday = subject.isAtTuesday();
-//        at_wednesday = subject.isAtWednesday();
-//        at_thursday = subject.isAtThursday();
-//        at_friday = subject.isAtFriday();
+        this.credit=subject.getCredit();
+        this.at_monday = subject.isAtMonday();
+        this.at_tuesday = subject.isAtTuesday();
+        this.at_wednesday = subject.isAtWednesday();
+        this.at_thursday = subject.isAtThursday();
+        this.at_friday = subject.isAtFriday();
     }
 }

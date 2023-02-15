@@ -4,6 +4,7 @@ import com.petproject.minivns.entities.Subject;
 import com.petproject.minivns.json.SubjectRequest;
 import com.petproject.minivns.json.SubjectResponse;
 import com.petproject.minivns.service.SubjectService;
+import net.bytebuddy.dynamic.scaffold.TypeInitializer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -38,7 +39,6 @@ public class SubjectController {
             return list;
         }
     }
-
     @GetMapping("/schedule")
     public List<SubjectResponse> getSchedule() {
         List<SubjectResponse> list = subjectService.getSchedule(LocalDateTime.now()).stream().map(SubjectResponse::new).collect(Collectors.toList());
@@ -49,7 +49,6 @@ public class SubjectController {
             return list;
         }
     }
-
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -79,11 +78,16 @@ public class SubjectController {
         } else {
             newSubject.setLabUrl("");
         }
-        newSubject.setAtMonday(subjectRequest.isAtMonday());
-        newSubject.setAtTuesday(subjectRequest.isAtTuesday());
-        newSubject.setAtWednesday(subjectRequest.isAtWednesday());
-        newSubject.setAtThursday(subjectRequest.isAtThursday());
-        newSubject.setAtFriday(subjectRequest.isAtFriday());
+        if (!(subjectRequest.getCredit()==null)) {
+            newSubject.setCredit(subjectRequest.getCredit());
+        } else {
+            newSubject.setLabUrl("");
+        }
+        newSubject.setAtMonday(subjectRequest.isAt_monday());
+        newSubject.setAtTuesday(subjectRequest.isAt_tuesday());
+        newSubject.setAtWednesday(subjectRequest.isAt_wednesday());
+        newSubject.setAtThursday(subjectRequest.isAt_thursday());
+        newSubject.setAtFriday(subjectRequest.isAt_friday());
         subjectService.create(newSubject);
 
         URI location = ServletUriComponentsBuilder
@@ -94,12 +98,10 @@ public class SubjectController {
                 .created(location)
                 .body(new SubjectResponse(newSubject));
     }
-
     @GetMapping("/{subject_id}")
     public SubjectResponse getOne(@PathVariable("subject_id") Integer subjectId) {
             return new SubjectResponse(subjectService.getById(subjectId));
     }
-
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @PutMapping({"/{subject_id}"})
     @ResponseStatus(HttpStatus.OK)
@@ -122,11 +124,16 @@ public class SubjectController {
         if (!(subjectRequest.getLab_url() == null)) {
             updatedSubject.setLabUrl(subjectRequest.getLab_url());
         }
-        updatedSubject.setAtMonday(subjectRequest.isAtMonday());
-        updatedSubject.setAtTuesday(subjectRequest.isAtTuesday());
-        updatedSubject.setAtWednesday(subjectRequest.isAtWednesday());
-        updatedSubject.setAtThursday(subjectRequest.isAtThursday());
-        updatedSubject.setAtFriday(subjectRequest.isAtFriday());
+        if (!(subjectRequest.getCredit()==null)) {
+            updatedSubject.setCredit(subjectRequest.getCredit());
+        } else {
+            updatedSubject.setLabUrl("");
+        }
+        updatedSubject.setAtMonday(subjectRequest.isAt_monday());
+        updatedSubject.setAtTuesday(subjectRequest.isAt_tuesday());
+        updatedSubject.setAtWednesday(subjectRequest.isAt_wednesday());
+        updatedSubject.setAtThursday(subjectRequest.isAt_thursday());
+        updatedSubject.setAtFriday(subjectRequest.isAt_friday());
         subjectService.update(updatedSubject);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -137,7 +144,6 @@ public class SubjectController {
                 .created(location)
                 .body(new SubjectResponse(updatedSubject));
     }
-
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @DeleteMapping("/{subject_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

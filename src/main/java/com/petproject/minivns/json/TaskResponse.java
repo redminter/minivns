@@ -19,8 +19,14 @@ public class TaskResponse {
      String link;
 
      LocalDateTime deadline;
-//    @JsonProperty("subject_by_subject_id")
-//     Subject subjectBySubjectId;
+    @JsonProperty("done_date")
+    LocalDateTime doneDate;
+
+    Integer mark;
+    @JsonProperty("max_mark")
+    Integer maxMark;
+    @JsonProperty("subject_id")
+     Integer subjectBySubjectId;
     @JsonProperty("is_done")
      Boolean isDone;
 
@@ -31,8 +37,12 @@ public class TaskResponse {
         this.title = task.getTitle();
         this.link = task.getLink();
         this.deadline = task.getDeadline();
-//        this.subjectBySubjectId = task.getSubjectBySubjectId();
+        this.doneDate=task.getDoneDate();
+        this.subjectBySubjectId = task.getSubjectBySubjectId().getId();
         this.isDone = task.getIsDone();
-//        this.user = task.getUser();
+        this.mark= task.getMark();
+        this.maxMark=task.getMaxMark();
+
+    //        this.user = task.getUser();
     }
 }

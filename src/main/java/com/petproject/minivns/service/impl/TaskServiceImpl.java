@@ -53,7 +53,10 @@ public class TaskServiceImpl implements TaskService {
         else{
             getById(task.getId()).setLink(task.getLink());
             getById(task.getId()).setDeadline(task.getDeadline());
+            getById(task.getId()).setDoneDate(task.getDoneDate());
             getById(task.getId()).setTitle(task.getTitle());
+            getById(task.getId()).setMark(task.getMark());
+            getById(task.getId()).setMaxMark(task.getMaxMark());
             task.setIsDone(getById(task.getId()).getIsDone());
             task.setUser(getById(task.getId()).getUser());
             task.setSubjectBySubjectId(getById(task.getId()).getSubjectBySubjectId());
@@ -90,20 +93,6 @@ public class TaskServiceImpl implements TaskService {
         }
         else{
             throw new  ResponseStatusException(HttpStatus.NO_CONTENT, "There is no tasks for this subjects");
-        }
-    }
-    @Override
-    public void changeState(Integer id){
-        Task task = getById(id);
-        if(task == null){
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "There is no task to change");
-        }
-        else if (!getAll().contains(task)){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task is not found and cannot be changed");
-        }
-        else {
-            task.setIsDone(!(task.getIsDone()));
-            taskRepository.save(task);
         }
     }
 }

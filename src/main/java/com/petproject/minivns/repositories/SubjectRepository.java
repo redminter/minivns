@@ -13,4 +13,5 @@ public interface SubjectRepository extends JpaRepository<Subject, Integer> {
      List<Subject> getAllByAtWednesdayIsTrue();
      List<Subject> getAllByAtThursdayIsTrue();
      List<Subject> getAllByAtFridayIsTrue();
+
 }

@@ -3,11 +3,17 @@ package com.petproject.minivns.controllers;
 import com.petproject.minivns.entities.User;
 import com.petproject.minivns.json.UserRequest;
 import com.petproject.minivns.json.UserResponse;
+import com.petproject.minivns.json.UserUpdateRequest;
 import com.petproject.minivns.service.RoleService;
 import com.petproject.minivns.service.UserService;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+//import org.springframework.security.access.prepost.PreAuthorize;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+//import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -27,8 +33,6 @@ public class UserController {
     final RoleService roleService;
 
     final PasswordEncoder passwordEncoder;
-
-
     public UserController(UserService userService, RoleService roleService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.roleService = roleService;
@@ -45,7 +49,6 @@ public class UserController {
             return list;
         }
     }
-
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> create(@Validated @RequestBody UserRequest userRequest, BindingResult result) {
@@ -72,29 +75,31 @@ public class UserController {
                 .created(location)
                 .body(new UserResponse(newUser));
     }
-
     @PreAuthorize("hasAnyRole('ROLE_ADMIN') or hasAnyRole('ROLE_USER') and authentication.principal.id == #userId")
     @GetMapping("/{user_id}")
     public UserResponse getOne(@PathVariable("user_id") Integer userId) {
         return new UserResponse(userService.getById(userId));
     }
-
     @PreAuthorize("hasAnyRole('ROLE_ADMIN') or hasAnyRole('ROLE_USER') and authentication.principal.id == #userId")
     @PutMapping({"/{user_id}"})
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<?> update(@PathVariable("user_id") Integer userId, @Valid @RequestBody UserRequest userRequest, BindingResult result) {
+    public ResponseEntity<?> update(@PathVariable("user_id") Integer userId, @Valid @RequestBody UserUpdateRequest userRequest, BindingResult result) {
         if (result.hasErrors()) {
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Some data is bad entered");
         }
         User updatedUser = userService.getById(userId);
-        updatedUser.setFirstName(userRequest.getFirst_name());
-        updatedUser.setLastName(userRequest.getLast_name());
-        updatedUser.setEmail(userRequest.getEmail());
-        updatedUser.setPassword(passwordEncoder.encode(userRequest.getPassword()));
-        if(userRequest.getRole_Id() != null){
-            updatedUser.setRole_Id(roleService.getById(userRequest.getRole_Id()));
+        if(userRequest.getFirst_name()!=null) {
+            updatedUser.setFirstName(userRequest.getFirst_name());
         }
-
+        if(userRequest.getLast_name()!=null) {
+            updatedUser.setLastName(userRequest.getLast_name());
+        }
+        if(userRequest.getEmail()!=null) {
+            updatedUser.setEmail(userRequest.getEmail());
+        }
+        if(userRequest.getPassword()!=null) {
+            updatedUser.setPassword(passwordEncoder.encode(userRequest.getPassword()));
+        }
         userService.update(updatedUser);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -105,11 +110,10 @@ public class UserController {
                 .created(location)
                 .body(new UserResponse(updatedUser));
     }
-
     @PreAuthorize("hasAnyRole('ROLE_ADMIN') or hasAnyRole('ROLE_USER') and authentication.principal.id == #userId")
     @DeleteMapping("/{user_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void delete(@PathVariable("user_id") Integer userId) {
-            userService.delete(userId);
+        userService.delete(userId);
     }
 }
