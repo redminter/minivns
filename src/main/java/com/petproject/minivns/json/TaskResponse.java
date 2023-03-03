@@ -3,6 +3,7 @@ package com.petproject.minivns.json;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.petproject.minivns.entities.Subject;
 import com.petproject.minivns.entities.Task;
 import lombok.Value;
 
@@ -26,7 +27,7 @@ public class TaskResponse {
     @JsonProperty("max_mark")
     Integer maxMark;
     @JsonProperty("subject_id")
-     Integer subjectBySubjectId;
+    Subject subjectBySubjectId;
     @JsonProperty("is_done")
      Boolean isDone;
 
@@ -38,7 +39,7 @@ public class TaskResponse {
         this.link = task.getLink();
         this.deadline = task.getDeadline();
         this.doneDate=task.getDoneDate();
-        this.subjectBySubjectId = task.getSubjectBySubjectId().getId();
+        this.subjectBySubjectId = task.getSubjectBySubjectId();
         this.isDone = task.getIsDone();
         this.mark= task.getMark();
         this.maxMark=task.getMaxMark();
