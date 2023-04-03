@@ -32,7 +32,7 @@ For running it you will need java 17 and postgreSql
 ```File->Preferences->Binary paths->PostgreSQL Binary paths section, your version of PostgreSql->Click on folder icon and choose path to postgresql bin folder.```
 
 4. After that you can run program and a server.
-5. To firstly run or rerun a database you need to uncomment in `resources/application.properties`
+5. To firstly run or rerun a database you need to uncomment in `resources/application.properties`(you don't need it if you was inserting database from this repository)
 ```sh
 #spring.jpa.hibernate.ddl-auto=update
 #spring.sql.init.mode=always 
